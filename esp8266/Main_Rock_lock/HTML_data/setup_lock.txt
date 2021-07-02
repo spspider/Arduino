@@ -1,0 +1,14 @@
+{
+  "ssid": "mi",
+  "password": "sp5506487",
+  "softAP": "RockLock",
+  "softAP_pass": "12345678",
+  "lock_pin": "2",
+  "lock_pin_invert": "1",
+  "open_timer": "1",
+  "count_timer_lock_anyway": "40",
+  "reg": "0",
+  "login_Authentication": "admin",
+  "pass_Authentication": "admin",
+  "open_type": 2
+}

@@ -1,0 +1,160 @@
+<!DOCTYPE html>
+<html lang="ru">
+
+<head>
+    <title>Other setup</title>
+
+    <meta http-equiv="Content-type" content="text/html; charset=utf-8">
+    <!--<link rel="stylesheet" href="bootstrap.min.css">-->
+    <script defer type="text/javascript" src="scripts/helper_func.js"></script>
+    <script type="text/javascript" src="scripts/setup_lock.js"></script>
+
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="Cache-Control" content="public"/>
+
+</head>
+
+
+
+
+<body> <!--onload="load();"-->
+<h1 id="loading">LOADING... wait</h1>
+<div class="container" id="container" style="display: none">
+    <form id="form" class="form-signin" method='POST' action='#'>
+        <table>
+            <tr>
+                <td>
+                    сервер
+                </td>
+                <td>
+                    <input type='text' value="{{ssid}}" class="form-control"
+                           placeholder='ssid' name='ssid'/>
+
+                </td>
+                <td>пароль</td>
+                <td>
+                    <input type='text' value="{{password}}" class="form-control" placeholder='password'
+                           name='password'/>
+                </td>
+            </tr>
+            <tr>
+                <td>
+                    точка доступа
+                </td>
+                <td>
+                    <input type='text' value="{{softAP}}" class="form-control"
+                           placeholder='softAP' name='softAP'/>
+                </td><td>пароль</td>
+                <td>
+                    <input type='text' value="{{softAP_pass}}" class="form-control"
+                           placeholder='softAP_pass' name='softAP_pass'/>
+                </td>
+            </tr>
+            <tr>
+                <td>
+                    пин замка
+                </td>
+                <td>
+                    <input type='text' value="{{lock_pin}}" class="form-control"
+                           placeholder='lock_pin' name='lock_pin'/>
+                </td><td>сигнал на открытие</td>
+                <td>
+                    <input type='text' value="{{lock_pin_invert}}" class="form-control"
+                           placeholder='lock_pin_invert' name='lock_pin_invert'/>
+                </td>
+            </tr>
+            <tr>
+                <td>
+                    открытие сек
+                </td>
+                <td>
+                    <input type='text' value="{{open_timer}}" class="form-control"
+                           placeholder='open_timer' name='open_timer'/>
+                </td><td>безусловное закрытие</td>
+                <td>
+                    <input type='text' value="{{count_timer_lock_anyway}}" class="form-control"
+                           placeholder='count_timer_lock_anyway' name='count_timer_lock_anyway'/>
+                </td>
+            </tr>
+            <tr>
+                <td>
+                 режим регистрации WIFI
+                </td>
+                <td>
+                    <input type='text' value="{{reg}}" class="form-control"
+                           placeholder='reg' name='reg'/>
+                </td>
+            </tr>
+            <tr>
+                <td>
+                   login (setup)
+                </td>
+                <td>
+                    <input type='text' value="{{login_Authentication}}" class="form-control"
+                           placeholder='login_Authentication' name='login_Authentication'/>
+                </td>
+                <td>
+                    pass (setup)
+                </td>
+                <td>
+                    <input type='text' value="{{pass_Authentication}}" class="form-control"
+                           placeholder='pass_Authentication' name='pass_Authentication'/>
+                </td>
+                <td>
+                   connectAs Ap (setup)
+                </td>
+                <td>
+                    <input type='text' value="{{connectAsAp}}" class="form-control"
+                           placeholder='connectAsAp' name='connectAsAp'/>
+                </td>
+            </tr>
+            <tr>
+                <td>
+                    тип открытия
+                </td>
+                <td>
+                    <div id="select_type_open"></div>
+                </td>
+            </tr>
+        </table>
+        <input type='button' class="btn btn-lg btn-primary btn-block" value='Сохранить'
+               onclick="CatchForm();"/><br>
+    </form>
+    <!--
+     <div id="test"></div>
+    -->
+    <br/>
+    <br/>
+
+    <a href="/">
+        <button>главная</button>
+    </a><br>
+    <a href="setup_lock">
+        <button>настройки замка</button>
+    </a><br>
+    <a href="setup_wg.html">
+        <button>настройки панели</button>
+    </a><br>
+    <a href="register">
+        <button>register WIFI</button>
+    </a><br>
+    <a href="reboot">
+        <button>restart</button>
+    </a><br>
+    <a href="WiFiClient">
+        <button>WifiSTA</button>
+    </a>
+    </a><br>
+    <a href="recordCard">
+        <button>Запись карты</button>
+    </a>
+    <pre id="input"></pre>
+    <pre id="output"></pre>
+
+
+</div>
+
+
+</body>
+
+</html>

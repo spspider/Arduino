@@ -1,0 +1,22 @@
+{
+  "iot_enable": false,
+  "mqttServerName": "m20.cloudmqtt.com",
+  "mqttuser": "user",
+  "mqttspacing": "60",
+  "mqttport": "16238",
+  "mqttpass": "pass",
+  "prefix": "/IoTmanager",
+  "deviceID": "WiFiGAS",
+  "smtp_arr": "mail.smtp2go.com",
+  "smtp_port": "2525",
+  "to_email_addr": "",
+  "from_email_addr": "",
+  "emaillogin": "",
+  "password_email": "",
+  "ipport": "80",
+  "timezone": "2",
+  "geo_enable": false,
+  "wifi_scan": true,
+  "ir_loop": false,
+  "loop_433": false
+}

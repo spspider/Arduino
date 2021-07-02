@@ -1,0 +1,10 @@
+http://jeelabs.net/pub/docs/ethercard/index.html
+
+
+PIN Connections (Using Arduino UNO): EtherCard	Arduino UNO 
+VCC	3.3V 
+GND	GND 
+SCK	Pin 13 
+SO	Pin 12 
+SI	Pin 11 
+CS	Pin 8

@@ -1,0 +1,8 @@
+111 - power
+95-winter summer switch
+63-light
+126-CHINC
+125-CHDEC
+119-DHWCINC
+123-DHEDEC
+127-no data

@@ -1,0 +1,1 @@
+{"/IoTmanager/dev01-kitchen/cooler0":"{\"status\":\"299\"}","/IoTmanager/dev01-kitchen/light1":"{\"status\":\"1\"}","/IoTmanager/dev01-kitchen/floor kitchen2":"{\"status\":\"0\"}","/IoTmanager/dev01-kitchen/floor kitchen23":"{\"status\":\"310\"}","/IoTmanager/dev01-kitchen/temp4":"{\"status\":\"124\"}"}

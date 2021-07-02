@@ -1,0 +1,77 @@
+int Number_fields=1;
+int length_check;
+
+//char b[15]="b00";
+//char e[15]="e00";
+int test_variable;
+String test_variable_string = "test_variable";
+
+char b_print[15];
+char e_print[15];
+
+void client_setup(){
+  if (Ethernet.begin(mac) == 0) {//старт интернета
+  Serial.println("Failed to configure Ethernet using DHCP");
+  Ethernet.begin(mac, ip);//не получилось, пробуем через IP
+  }
+  // give the Ethernet shield a second to initialize:
+  delay(1000);
+  Serial.println("connecting...");
+  
+  // if you get a connection, report back via serial:
+  if (client_my.connect(server_my, 80)) {
+  Serial.println("connected");
+  // Make a HTTP request:
+  client_my.println("GET /index.php HTTP/1.1");
+  client_my.println("Host: www.arduinowebserver.hol.es");
+  client_my.println("Connection: close");
+  client_my.println();
+  //закончили соединение
+
+ ///узнаем кол-во записей
+ finder.findUntil("Number_fields:",":number");  // до чего
+ Number_fields = finder.getValue();
+ Serial.print("Number_fields:");
+ Serial.print(Number_fields);Serial.println("\n");
+
+/// создаем переменную в интернете
+client_my.println("GET /index.php?indata=arduino HTTP/1.1");
+//client_my.println("Host: www.arduinowebserver.hol.es");
+//////
+for (int i=0; i <= Number_fields; i++){
+
+String b_string="b00";b_string.concat(i);b_string.concat("_");
+String e_string;
+e_string.concat(i);b_string.concat("_e00");
+
+b_string.toCharArray(b_print, 15);
+e_string.toCharArray(e_print, 15); 
+
+//Serial.print("\n Integer:");
+//Serial.print(b_print);
+//Serial.print(e_print);
+//Serial.print("Integer \n");
+
+  finder.findUntil(b_print,e_print);  // до чего
+  values[i] = finder.getValue();//переводим все данные в массив
+ // Serial.print("values_i:");
+//  Serial.print(i);Serial.print(" ");
+//  Serial.print(values[i]);Serial.print(":");
+//  Serial.println("\n");
+  }
+   
+   }
+  else {
+  // kf you didn't get a connection to the server:
+  Serial.println("connection failed");
+  }
+}
+
+void client_loop(){
+   if (!client_my.connected()) {
+    Serial.println();
+    Serial.println("disconnecting.");
+    client_my.stop();
+    while (true);
+    }
+}

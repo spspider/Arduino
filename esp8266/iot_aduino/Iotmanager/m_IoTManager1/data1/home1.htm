@@ -1,0 +1,57 @@
+<!DOCTYPE html>
+<html lang="ru">
+	<head>
+		<title>CaptivePortal</title>
+	</head>
+<body>
+<meta name="viewport" http-equiv="Content-Type" content="width=device-width, initial-scale=1; charset=utf-8"/>
+<!--<meta http-equiv="Content-Type" content="text/html; charset=utf-8"> -->
+
+  <link rel="stylesheet" href="/bootstrap.min.css">
+  <link rel="stylesheet" type="text/css" href="/style.css">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+<style>
+h1 {text-align:center;}
+p {text-align:center;}
+b {text-align:center;}
+</style>
+
+  <script type="text/javascript" src="/script_home.js"></script>
+</body>
+
+
+</body>
+<body>
+
+
+  <div class="container">
+   <div class="row" style="text-align:center;">
+    <h1 style="margin:50px;">Доп. настройки</h1>
+    <div class="col-sm-offset-2 col-sm-8 col-md-offset-3 col-md-6">
+     <h2>Точка доступа</h2>
+       <b>LED Control 2:</b><br/>
+<br/>
+ <a class="btn btn-block btn-default" href="\setup">настройки</a>
+<input class="btn btn-block btn-success" id="btn3" type="button" value="Отправить Hello" onclick="sendHello();" />
+<input class="btn btn-block btn-success" id="btn4" type="button" value="тест" onclick="sendText();" />
+<p id="demo"></p>
+<p id="demo1"></p>
+     <div class="row">
+     
+      <div class="col-sm-6">
+       <input id="ssidap" value="{{ssidAP}}" class="form-control" pattern="[0-9a-zA-Z.]{1,15}" placeholder="Имя WiFi сети">
+       <input id="passwordAp" value="{{passwordAP}}" pattern=".{8,15}" onfocus="this.type='text'" type="password" class="form-control" placeholder="Пароль">
+       <input class="btn btn-block btn-success" value="Сохранить" onclick="set_ssid_ap(this);" type="submit">
+      </div>
+      <div class="col-sm-6">
+       <div class="alert alert-dismissible alert-warning">Здесь вы можете указать новое название WiFi жалюзи и пароль.</div>
+      </div>
+     </div>
+     </div>
+    </div>
+    </div>
+
+   
+</body>
+
+</html>

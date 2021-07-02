@@ -1,0 +1,77 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>WebSocket Oscilloscope</title>
+<style>
+body {background: #2e2e2e; color: #a0bbbb; font-family: Helvetica; }
+::selection {background: #a0bbbb;}
+::-moz-selection {background: #a0bbbb;}
+input, textarea, button, select, select:focus {outline: none;}
+
+#c1 {width: 512px; height: 256px;  margin: 0 0 12px 12px; background: #2e2e2e; border: 1px solid #949494; border-radius: 4px;
+  background-image: url(data:image/svg+xml;base64,ICA8c3ZnIHdpZHRoPSI1MTJweCIgaGVpZ2h0PSIyNTZweCIgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIj4gICAgPGRlZnM+ICAgICAgPHBhdHRlcm4gaWQ9ImdyaWQiIHdpZHRoPSI2NCIgaGVpZ2h0PSI2NCIgcGF0dGVyblVuaXRzPSJ1c2VyU3BhY2VPblVzZSI+ICAgICAgICA8cGF0aCBkPSJNIDY0IDAgTCAwIDAgMCA2NCIgZmlsbD0ibm9uZSIgc3Ryb2tlPSIjOTQ5NDk0IiBzdHJva2Utd2lkdGg9IjEiIHN0cm9rZS1kYXNoYXJyYXk9IjIiLz4gICAgICA8L3BhdHRlcm4+ICAgIDwvZGVmcz4gICAgPHJlY3Qgd2lkdGg9IjEwMCUiIGhlaWdodD0iMTAwJSIgZmlsbD0idXJsKCNncmlkKSIgLz4gIDwvc3ZnPg==);
+}
+#rx1, #rx2 {margin: 0 0 0 12px; font-size: 18px; font-weight:normal;}
+
+.btn{width: 82px; height: 40px; margin: -4px 0 -2px 0; background: #3e5050; color:#a0bbbb; border: 1px solid #949494; border-radius: 4px; outline: none; font-family: Helvetica; font-size: 18px;}
+.btn:active {background: linear-gradient(#3e5050, #949494); border: 1px solid #FFF; color:#FFF;}
+
+</style>
+</head>
+<body>
+<body onload="init();">
+
+<p><a id='rx1'></a></p>
+<p><a id='rx2'></a></p>
+<canvas id="c1" width="512" height="256"></canvas>
+<div>
+<input type='submit' class='btn' value='Start' style='margin: 0 0 0 12px;' onclick="Socket.send('1'); next = true;">
+<input type='submit' class='btn' value='Stop' onclick="Socket.send('2'); next = false;">
+<input type='submit' class='btn' value='Reset' onclick="Socket.send('3'); ">
+</div>
+
+<script type='text/javascript'>
+rx1.innerHTML = 'WebSocket Oscilloscope';
+rx2.innerHTML = 'data.length: 0000 - y: 0000 - x: 0000';
+var Socket;
+var x = 0;
+var m = 4;
+var maxX = 512;
+var next = true;
+var data = [];
+var ctx = c1.getContext('2d');
+ctx.strokeStyle = "#FFF";
+ctx.beginPath(); 
+ctx.moveTo(0,128);
+
+function init() {
+  Socket = new WebSocket('ws://' + window.location.hostname + ':81/');
+  Socket.onmessage = function(event){
+    data.push(event.data);
+    rx2.innerHTML = 'data.length: ' + data.length + ' - y: ' + event.data + ' - x: ' + x;
+    if (next) {
+    if (x++ < maxX) {
+        //ctx.lineTo(x*m,data[x-1]);
+        //ctx.stroke();
+    } else {
+        ctx.beginPath();
+        ctx.clearRect(0,0,512,256);
+        for (var i = 0; i < maxX; i++) {
+            var y = data[x - maxX + i];
+            ctx.lineTo(i*m,y);
+        }
+        ctx.stroke();
+    }       
+    }
+    if (data.length > 2047){
+      data.splice(0,data.length-maxX);
+      x = maxX;
+      if (next) {Socket.send('1');}
+    }
+  }
+}
+
+</script>
+</body>
+</html>

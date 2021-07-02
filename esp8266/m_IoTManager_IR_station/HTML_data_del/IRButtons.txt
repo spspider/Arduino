@@ -1,0 +1,1 @@
+{"code":["E01F9A65","E01F3AC5","20DF4EB1","20DF8E71"],"name":["knopka vverh","knopka vniz","krasnaya knopka TV","zelenaya knopka TV"],"num":4}

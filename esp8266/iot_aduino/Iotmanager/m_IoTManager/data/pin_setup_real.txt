@@ -1,0 +1,1 @@
+{"numberChosed":"5","pinmode":["low_pwm","out","pwm","pwm","adc"],"id":["0","1","2","3","4"],"pin":[4,5,10,10,17],"page":["Kitchen","Kitchen","Kitchen","Kitchen","Kitchen"],"descr":["cooler","light","floor kitchen","floor kitchen2","temp"],"widget":["range","toggle","range","range","small-badge"],"defaultVal":[299,1,0,310,124]}

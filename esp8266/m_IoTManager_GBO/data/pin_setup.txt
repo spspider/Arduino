@@ -1,0 +1,1 @@
+{"numberChosed":2,"pinmode":[11,11],"pin":[255,255],"descr":["уровень газа","газ"],"widget":[5,6],"IrBtnId":[255,255],"defaultVal":[0,0],"aDiv":49.475,"aSusbt":3057,"router":255,"w433":255,"PWM_interval":"60","PCorr":"300"}

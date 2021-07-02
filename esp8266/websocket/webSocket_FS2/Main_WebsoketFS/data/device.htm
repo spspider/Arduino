@@ -1,0 +1,107 @@
+<html>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<head>
+<script>
+var connection = new WebSocket('ws://'+location.hostname+':81/', ['arduino']);
+var Text;
+connection.onopen = function(){
+    connection.send('Connect ' + new Date()); 
+};
+
+connection.onerror = function(error){
+    console.log('WebSocket Error ', error);
+};
+
+connection.onmessage = function(evt)
+{
+
+	document.getElementById('textrecieveESP').value = evt.data;
+
+//document.getElementById('Text').value = evt.data;
+
+
+};
+
+function sendText() {
+  // Construct a msg object containing the data the server needs to process the message from the chat client.
+var jsonRecieve ={
+"id":"0",
+"page":"Kitchen",
+"descr":"Light-0",
+"widget":"toggle",
+"topic":"/IoTmanager/dev01-kitchen/light0",
+"color":"blue"
+};
+var str = JSON.stringify(jsonRecieve);
+//alert( str ); // {"title":"Конференция","date":"сегодня"}
+var strParse =JSON.parse(str);
+// Обратное преобразование.
+//event = JSON.parse(str);
+//var makeButton = "str"+strParse.id+strParse.page;
+var makeButton =
+"<input id='btn_device"+strParse.id+"' type='button' value='"+strParse.descr+"' onclick='sendRGB();' /><br/>";
+document.getElementById("demo").innerHTML += makeButton;
+
+//connection.send(str);
+
+//var str = '{"title":"Конференция","date":"2014-11-30T12:00:00.000Z"}';
+var str2=str;
+str2 = JSON.parse(str2);
+document.getElementById('textParse').value = str2.contents[1].productID+' '+str2.contents[0].productID;
+alert(str2.contents.productID[0]+' '+str2.contents.productID[1] ); // теперь сработает!
+};
+function sendHello(){
+document.getElementById("demo").innerHTML="";
+connection.send("HELLO");
+
+}
+function sendRGB(){
+var name1="red";
+var name2="green";
+var name3="blue";
+var valcont =  new Object();
+valcont.jsonParse_succ="jsonParse_succ";
+valcont.type="Range";
+valcont[name1] = parseInt(document.getElementById('r').value).toString(16);
+valcont[name2] = parseInt(document.getElementById('g').value).toString(16);
+valcont[name3]= parseInt(document.getElementById('b').value).toString(16);
+
+var jsonText = JSON.stringify(valcont, "\t");
+//alert(jsonText)
+document.getElementById('recieveParse').value = jsonText;
+
+//document.write(jsonText);
+document.getElementById("demo").innerHTML +=jsonText;
+connection.send(jsonText);
+
+};
+
+</script>
+</head>
+<body>
+<b>LED Control 2:</b><br/>
+<i>Load html from separate file</i><br/>
+<br/>
+
+sentText(fromhtml): <input id="textsent" type="input" size="200" value="sentText" /><br/>
+recieveParse(fromhtml): <input id="recieveParse" type="input" size="200" value="jsonText" /><br/>
+sentText(fromESP): <input id="textsentESP" type="input" size="200" value="sentText" /><br/>
+recieveText(fromESP): <input id="textrecieveESP" type="input" size="200" value="sentText" /><br/>
+parsrText(fromESP): <input id="textParseESP" type="input" size="200" value="" /><br/>
+R: <input id="r" type="range" min="0" max="255" step="1" onchange="sendRGB();" /><br/>
+G: <input id="g" type="range" min="0" max="255" step="1" onchange="sendRGB();" /><br/>
+B: <input id="b" type="range" min="0" max="255" step="1" onchange="sendRGB();" /><br/>
+<input id="btn1" type="button" value="sendText" onclick="sendText();" /><br/>
+<br/>
+<input id="btn1" type="button" value="sendRGB" onclick="sendRGB();" /><br/>
+<input id="btn3" type="button" value="sendHello" onclick="sendHello();" /><br/>
+<p id="demo"></p>
+<br/>
+
+
+<input id="btn1" type="button" value="sendRGB" onclick="sendRGB();" /><br/>
+<p id="demo"></p>
+<br/>
+</body>
+
+</html>

@@ -1,0 +1,1 @@
+{"code":["20DF4EB1","20DF8E71","20DFC03F",3],"name":["krasnaya knopka TV","zelenaya knopka TV","gromkost' nizhe","включить кондер"],"num":4}

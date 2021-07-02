@@ -1,0 +1,2 @@
+bin adress: 		0x00000
+[SPIFFS] address: 	0x7B000
