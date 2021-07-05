@@ -1,1 +1,0 @@
-{"tID":[0],"En":[1],"times":[809],"dates":[-1],"bySignal":[-1],"bySignalPWM":[-1],"type":[1],"timer":[-1],"timerType":[-1],"act":[9],"actBtn":["5 1 1"],"actOn":[2],"pwmTypeAct":[-1],"ID":1,"Numbers":1}
