@@ -9,8 +9,8 @@
 
 */
 // DNS server
-const byte DNS_PORT = 53;
-DNSServer dnsServer;
+//const byte DNS_PORT = 53;
+//DNSServer dnsServer;
 
 //unsigned char softap_stations_cnt;
 //struct station_info *stat_info;
@@ -58,8 +58,8 @@ void captive_setup() {
   ESP_busy = true;
 
   /* Setup the DNS server redirecting all the domains to the apIP */
-  dnsServer.setErrorReplyCode(DNSReplyCode::NoError);
-  dnsServer.start(DNS_PORT, "*", apIP);
+  //dnsServer.setErrorReplyCode(DNSReplyCode::NoError);
+  //dnsServer.start(DNS_PORT, "*", apIP);
 
   server_init();
   Captive_server_init();
@@ -184,7 +184,9 @@ void captive_loop() {
   }
   if (try_MQTT_access) {
     if (IOT_Manager_loop) {
+#if defined(pubClient)
       loop_IOTMAnager();
+#endif
     }
   }
   if ((!try_MQTT_access) && (WiFi.status() == WL_CONNECTED) && (WiFi.getMode() == WIFI_STA)) {
@@ -335,7 +337,7 @@ void captive_loop() {
   //
   //HTTP
 
-  dnsServer.processNextRequest();
+  //dnsServer.processNextRequest();
   server.handleClient();
 
 }

@@ -1,19 +1,23 @@
 //4mb 1mb 1mb
 
-#define ws2811_include// активировать для ws2811
-#define will_use_serial
-
+//----------------------------------------defines-------------------------------//
+//#define ws2811_include// активировать для ws2811
+//#define will_use_serial
+//#define pubClient
+//------------------------------------------------------------------------------//
 #include <Adafruit_GFX.h>
 #include <gfxfont.h>
 
 //#include <WiFiManager.h>     //https://github.com/tzapu/WiFiManager WiFi Configuration Magic
-#include <DNSServer.h>
+//#include <DNSServer.h>
 #include <ESP8266mDNS.h>
 #include <ESP8266WiFi.h>
 #include <WiFiClient.h> //iotmanager
 #include <EEPROM.h>
 //#include <WiFiClientSecure.h>
+#if defined(pubClient)
 #include <PubSubClient.h>
+  #endif
 #include <ESP8266WebServer.h>     //Local WebServer used to 
 //////////////////////////////////compass
 //#include <AS5600.h>
@@ -23,9 +27,8 @@
 #include <FS.h>
 //#include <ESP8266WiFiMulti.h>
 
-#if defined(will_use_serial)
+
 #define DBG_OUTPUT_PORT Serial
-#endif
 
 //Encoder//
 //bool EncoderA_prev = false;
@@ -111,10 +114,9 @@ char password[32] = "";
 short unsigned int ipport = 80;
 /* hostname for mDNS. Should work at least on windows. Try http://esp8266.local */
 const char *myHostname = "esp8266";
-///////////////////////////IOT///////////
+#if defined(pubClient)
 char prefix[20]  = "/IoTmanager";     // global prefix for all topics - must be some as mobile device
 char deviceID[20] = "dev01-kitchen";   // thing ID - unique device id in our project
-/////////////////////////////////////////
 char mqttServerName[25] = "m20.cloudmqtt.com";
 unsigned int mqttport = 16238;
 //String mqttuser = "spspider";
@@ -122,6 +124,7 @@ char mqttuser[15] = "spspider";
 //String mqttpass = "5506487";
 char mqttpass[15] = "5506487";
 unsigned char type_mqtt = 1;
+#endif
 //////////////Email///////////
 char smtp_arr[] = "mail.smtp2go.com";
 short unsigned int smtp_port = 2525;

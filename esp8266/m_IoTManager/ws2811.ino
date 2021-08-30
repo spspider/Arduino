@@ -23,6 +23,7 @@ FASTLED_USING_NAMESPACE
 #define LED_TYPE    WS2811
 #define COLOR_ORDER GRB
 #define NUM_LEDS    88//40//53 - двери: 52 ванна 88, компьютер 8
+//#if defined(ws2811_include)
 CRGB leds[NUM_LEDS];
 
 //CRGB leds_prep[NUM_LEDS];

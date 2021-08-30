@@ -27,16 +27,11 @@ WiFiClient wclient;
 //String mqttServerName = "m20.cloudmqtt.com";            // for cloud broker - by hostname, from CloudMQTT account data
 //unsigned int    mqttport = 16238;                                // default 1883, but CloudMQTT.com use other, for example: 13191, 23191 (SSL), 33191 (WebSockets) - use from CloudMQTT account data
 //String mqttuser =  "spspider";                              // from CloudMQTT account data
-//String mqttpass =  "5506487";                              // from CloudMQTT account data
+//String mqttpass =  "5506487";
+// from CloudMQTT account data
+#if defined(pubClient)
 PubSubClient client(wclient); // for cloud broker - by hostname
-
-
-// config for local mqtt broker by IP address
-//IPAddress server(192, 168, 1, 100);                        // for local broker - by address
-//int    mqttport = 1883;                                    // default 1883
-//String mqttuser =  "";                                     // from broker config
-//String mqttpass =  "";                                     // from broker config
-//PubSubClient client(wclient, server, mqttport);            // for local broker - by address
+#endif
 
 //String val;
 //String ids = "";
@@ -47,14 +42,16 @@ unsigned int oldtime = 0;
 //const String stat1 = "{\"status\":\"1\"}";
 //const String stat0 = "{\"status\":\"0\"}";
 
-char nWidgets = 12;
-const char nWidgetsArray = 12;
+char nWidgets = 9;
+const char nWidgetsArray = 9;
 short int stat        [nWidgetsArray];
 //String sTopic      [nWidgetsArray];
-char sTopic_ch      [nWidgetsArray][50];
 
+#if defined(pubClient)
+char sTopic_ch      [nWidgetsArray][50];
+  #endif
 char widget      [nWidgetsArray];// inputWidjet[0] = 'unknown';1 = 'toggle';2 = 'simple-btn';4 = 'range';4 = 'small-badge';5 = 'chart';
-char descr       [nWidgetsArray][20];
+char descr       [nWidgetsArray][10];
 //String thing_config[nWidgetsArray];
 char    id          [nWidgetsArray];
 unsigned char    pin         [nWidgetsArray];
@@ -89,7 +86,7 @@ char* setStatus ( char* s ) {
   }
   else if (type_mqtt == 1) {
     //stat = s;
-    strcpy(stat, s);
+    strncpy(stat, s, sizeof(stat));
   }
   return stat;
 }
@@ -120,9 +117,11 @@ char* setStatus ( float s ) {
 }
 void initVar() {
 
-
+#if defined(pubClient)
   initThingConfig();
+    #endif
 }
+#if defined(pubClient)
 void initThingConfig() {
   for (char i = 0; i < nWidgets; i++) {
     //sTopic_ch[i]   = prefix + "/" + deviceID + "/" + descr[i];
@@ -195,6 +194,7 @@ String make_thing_config(char i) {
 
   return this_thing_config;
 }
+
 void pubStatus(char t[], char* payload) {
   if (!client.connected())  return;
 
@@ -209,6 +209,7 @@ void pubStatus(char t[], char* payload) {
     Serial.println("Publish new status for " + String(t) + " FAIL!");
   }
 }
+
 void pubConfig() {
   bool success;
 
@@ -273,6 +274,7 @@ void pubConfig() {
     delay(150);
   }
 }
+
 /*
   String getValue(String data, char separator, int index)
   {
@@ -328,7 +330,7 @@ void callback(char* topic_char, byte * Byte, unsigned char length) {
   //pubStatus(deviceID + "/PLUS/" + String(thatCondition, DEC) + "/" + String(i, DEC), setStatus(bySignalPWM[thatCondition][i]));
 
   char buff[50];
-  strcpy (buff, topic_char);  char* deviceID_topic = delimeter(buff, "/", 0);
+  strncpy (buff, topic_char, sizeof(buff) - 1);  char* deviceID_topic = delimeter(buff, "/", 0);
   strcpy (buff, topic_char);  char* option_topic = delimeter(buff, "/", 1);
   strcpy (buff, topic_char);  char* thatCondition = delimeter(buff, "/", 2);
   strcpy (buff, topic_char);  char* thatConditionNumber = delimeter(buff, "/", 3);
@@ -402,86 +404,9 @@ void callback(char* topic_char, byte * Byte, unsigned char length) {
     }
   }
 }
+#endif
 
-
-void Setup_pinmode(bool stat_loaded) {
-  for (char i = 0; i < char(nWidgets); i++) {
-
-    stat[i] = stat_loaded ? stat[i] : defaultVal[i];
-    if (pin[i]!=255){
-    //callback_scoket(char i, int payload_is);
-    ///////
-    if (((pin[i] >= 6) && (pin[i] <= 9))) {
-      //if (((pin[i] >= 6) && (pin[i] <= 9)) || (pin[i] == 255)) {
-      break;
-    }
-    if (pinmode[i] == 1) {//in
-      defaultVal[i] == 0 ? pinMode(pin[i], INPUT_PULLUP) : pinMode(pin[i], INPUT);
-      stat[i] = (digitalRead(pin[i] ^ defaultVal[i]));
-      //Serial.println("set input:" + String(pin[i], DEC) + "i:" + i);
-    }
-    if ((pinmode[i] == 2)) { //out
-      pinMode(pin[i], OUTPUT);
-      //stat[i] =  (defaultVal[i]);
-      digitalWrite(pin[i],  stat[i] ); //^defaultVal[i]
-      //stat[i] = (defaultVal[i]);
-      //Serial.println("set output:" + String(pin[i], DEC) + "i:" + i + "stat:" + stat[i] + "def:" + String(defaultVal[i], DEC));
-    }
-    if ((pinmode[i] == 3) || (pinmode[i] == 7)) { //pwm,MQ7
-      pinMode(pin[i], OUTPUT);
-
-      analogWrite(pin[i], stat[i]); // PWM
-      //      setPwmFrequency(pin[i], 1024);
-
-      //analogWrite(pin[i], 286);//1.4V
-      //Serial.println("set pwm:" + String(pin[i], DEC) + "i:" + String(i, DEC) + "stat:" + String(stat[i], DEC));
-    }
-    if (pinmode[i] == 5) {//low_pwm
-      pinMode(pin[i], OUTPUT);
-      low_pwm[i] = stat[i];
-      digitalWrite(pin[i], 1);//далее - выключаем
-      //Serial.println("set low_pwm:" + String(pin[i], DEC) + "i:" + String(i, DEC) + "stat:" + String(stat[i], DEC));
-    }
-    if (pinmode[i] == 4) {//adc// analogDivider analogSubtracter
-      //stat[i] = (analogRead(17) * 1.0F / analogDivider) + analogSubtracter; //adc pin:A0//
-      stat[i] = (analogRead(17) * 1.0F - analogSubtracter) / analogDivider; //adc pin:A0//
-      //Serial.println("read adc:" + String(pin[i], DEC) + "i:" + String(i, DEC) + "stat:" + String( stat[i], DEC));
-    }
-
-    if ((pinmode[i] == 6) || (pinmode[i] == 8)) { //dht temp
-      dht.setup(pin[i]); // data pin
-      Serial.println("DHT:" + String(pin[i], DEC) );
-    }
-    if (pinmode[i] == 9) {//Dimmer
-      //attachInterrupt(pin[i], zero_crosss_int, RISING);//When arduino Pin 2 is FALLING from HIGH to LOW, run light procedure!
-      //InitInterrupt(do_on_delay, freqStep);
-
-    }
-
-    if (pinmode[i] == 10) { //powerMeter
-      //pinMode(pin[i], OUTPUT);
-      emon1.current(17, PowerCorrection);//PowerCorrection=111.1
-    }
-    if (pinmode[i] == 11) { //compass
-
-    }
-    if (pinmode[i] == 13) { //EncoderA
-      pinMode(pin[i], INPUT);
-      //attachInterrupt(digitalPinToInterrupt(pin[i]), doEncoderA, RISING);
-    }
-    if (pinmode[i] == 14) { //EncoderB
-      pinMode(pin[i], INPUT);
-      //attachInterrupt(digitalPinToInterrupt(pin[i]), doEncoderB, CHANGE);
-    }
-    if (pinmode[i] == 15) { //ads
-      ads.begin();
-    }
-
-  }
-  }
-
-}
-
+#if defined(pubClient)
 void setup_IOTManager() {
 
 
@@ -500,9 +425,9 @@ void setup_IOTManager() {
   }
 
 }
+#endif
 
-
-
+#if defined(pubClient)
 void loop_IOTMAnager() {
 
   if (WiFi.status() == WL_CONNECTED) {
@@ -514,6 +439,7 @@ void loop_IOTMAnager() {
       bool success = false;
       //if (internet) {
       //const char *__deviceID = deviceID.c_str();
+
       if (strlen(mqttuser) != 0) {
         //if (mqttuser.length() > 0) {
 
@@ -532,7 +458,9 @@ void loop_IOTMAnager() {
       if (success) {
         server.send(200, "text/json", "{client:connected}");
         Serial.println("Connect to MQTT server: Success");
+
         pubConfig();
+
         subscribe_loop = 0;
         // const char *__prefix = prefix.c_str();
 
@@ -583,6 +511,7 @@ void loop_IOTMAnager() {
         */
         //////////////////////////
       }
+
 
     }
 
@@ -637,93 +566,5 @@ void loop_IOTMAnager() {
     }
   }
 }
-float get_new_pin_value(uint8_t i) {
-
-
-  float that_stat = 0.0f;
-  if (pin[i] == 255) {
-   return that_stat;
-  }
-  //  if ((get_new_pin_value_) && (!license)) get_new_pin_value_ = false;
-  that_stat = stat[i];
-  switch (pinmode[i]) {
-    case 1://in
-      that_stat = digitalRead(pin[i])^defaultVal[i];
-      stat[i] = that_stat;
-      break;
-    case 2://out
-      // that_stat = digitalRead(pin[i])^defaultVal[i];
-      //stat[i] = that_stat;
-      break;
-    case 3:
-      break;
-    case 4://adc
-      if (!license)return 127;
-      //that_stat = (analogRead(pin[i]) / analogDivider) + analogSubtracter; //adc pin:A0
-      //that_stat = (analogRead(17) - analogSubtracter) / analogDivider * 1.0F;
-      stat[i] = (int)that_stat;
-      break;
-    case 6://dht Temp
-      if (!license)return 127;
-      that_stat = (dht.getTemperature());
-      that_stat == 0 ? that_stat = stat[i] : that_stat;
-      break;
-    case 7:
-      if (!license)return 127;
-      that_stat = (float)low_pwm_off;
-      break;
-    case 8://dht Hum
-      if (!license)return 127;
-      that_stat = (dht.getHumidity());
-      that_stat == 0 ? that_stat = stat[i] : that_stat;
-      break;
-    case 9://remote
-      if (!license)return 127;
-      that_stat = getHttp(String(descr[i])).toFloat();
-      break;
-    case 11:
-      if (!license)return 127;
-      //compass
-      //      that_stat = dimmer.getPower();
-
-      //that_stat = (encoder.getAngle() - analogSubtracter) / analogDivider * 1.0F;
-
-
-      break;
-    case 12://MAC ADRESS
-      //that_stat = stat[i] ^ 1;
-      break;
-    case 13://EncA
-      that_stat = no_internet_timer;
-      break;
-    case 14://EncB
-      //that_stat = stat[i] ^ 1;
-      break;
-    case 15://ads
-        that_stat = (ads.readADC_SingleEnded(defaultVal[i]));
-      break;
-    case 10://PowerMeter должен быть последним, иначе ошибка jump to case label
-      if (!license)return 127;
-      // double Irms ;
-      double Irms = emon1.calcIrms(1480);  // Calculate Irms only
-      that_stat = ((float)Irms * 1.0F);//  + analogSubtracter;
-      //that_stat = (that_stat * 1.0F / analogDivider) + analogSubtracter;
-      that_stat = (that_stat - analogSubtracter) / analogDivider * 1.0F;
-      break;
-
-      /*
-        case 11:
-
-
-
-        break;
-      */
-  }
-  //that_stat = (isnan(that_stat) || isnanf (that_stat)) ? 0 : that_stat;
-  if ((isnan(that_stat)) || ( isinf (that_stat))) {
-    that_stat =  stat[i];//0
-  }
-  
-  return that_stat;
-}
+#endif
 

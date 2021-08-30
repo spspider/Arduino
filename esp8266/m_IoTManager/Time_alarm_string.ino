@@ -142,7 +142,7 @@ bool load_Current_condition(String jsonCondition) {
       //timerType_a[thatCondition][i] =  timerType_that;
       act_a[thatCondition][i] = act_that;
       //actBtn_a[thatCondition][i] = actBtn_that;
-      strcpy(actBtn_a_ch[thatCondition][i], rootjs["actBtn"][i]);
+      strncpy(actBtn_a_ch[thatCondition][i], rootjs["actBtn"][i], sizeof(actBtn_a_ch[thatCondition][i]));
       actOn_a[thatCondition][i] = actOn_that;
 
       times[thatCondition][i] = times_that;
@@ -152,6 +152,7 @@ bool load_Current_condition(String jsonCondition) {
       En_a[thatCondition][i] = En_that;
 
       alarm_is_active[thatCondition][i] = alarm_is_active[thatCondition][i] ^ true;
+      #if defined(pubClient)
       if (client.connected())  {
         if ((bySignal[thatCondition][i] == 2) || (bySignal[thatCondition][i] == 3)) {
           Serial.println("POSSIBLE PUBLISH bySignalPWM[c][n]:" + String(bySignalPWM[thatCondition][i], DEC));
@@ -163,6 +164,7 @@ bool load_Current_condition(String jsonCondition) {
 
         }
       }
+      #endif
     }
     NumberIDs[thatCondition] = Numbers_that;//количество в этом условии (на этой кнопке);
     NumberIDs[thatCondition] > 10 ? NumberIDs[thatCondition] = 0 : true;
@@ -346,7 +348,9 @@ void loop_alarm() {
   if (onesec > check_bySignal_variable + 1 ) {
     check_for_changes();
     check_bySignal_variable = onesec;
+    #if defined(pubClient)
     subscr_loop_PLUS();
+    #endif
   }
   if (check_internet) {
     if (onesec > update_alarm_active + 21600 ) { //каждые 6 часов
@@ -420,6 +424,8 @@ void CheckInternet(String request) {
   }
   }
 */
+#if defined(pubClient)
+
 char subscr_loop_PLUS_i = 0;
 char subscr_loop_PLUS_i1 = 0;
 
@@ -450,6 +456,7 @@ void subscr_loop_PLUS() {
     }
   }
 }
+#endif
 void check_for_changes() {
   //Serial.println("check");
   if (timer_alarm_action_switch == 0) {
@@ -665,7 +672,9 @@ void make_action(uint8_t that_condtion_widget, uint8_t that_number_cond, bool op
     else if ((act_a[that_condtion_widget][that_number_cond] == 4) && (!opposite)) { //"отправить Email"//////////////////////////////////////////////////////////
       String buffer;
       buffer += String(actBtn_a_ch[that_condtion_widget][that_number_cond]); //сообщение в условии
-      buffer = "сработала тревога на датчике:" + String(descr[that_condtion_widget]) + " топик:" + String(sTopic_ch[that_condtion_widget]) + " на пине:" + String(digitalRead(pin[that_condtion_widget]));
+      //      buffer = "сработала тревога на датчике:" + String(descr[that_condtion_widget]) + " топик:" + String(sTopic_ch[that_condtion_widget]) + " на пине:" + String(digitalRead(pin[that_condtion_widget]));
+      buffer = "сработала тревога на датчике:" + String(descr[that_condtion_widget]) + " на пине:" + String(digitalRead(pin[that_condtion_widget]));
+
       buffer += "\n";
       buffer += "время на устройстве:" + String(hour()) + ":" + String(minute());
       buffer += "последнее местоположение:";
@@ -796,7 +805,7 @@ void make_action(uint8_t that_condtion_widget, uint8_t that_number_cond, bool op
       int value = root["msg"];
       value ^= opposite;
       sprintf(char_arr, "%d", value);
-
+#if defined(pubClient)
       Serial.println("Publish : (topic:" + root["Topic"].as<String>() + " msg:" + String(char_arr) + ")");
       if (client.connected()) {
         if (client.publish(root["Topic"], char_arr)) {
@@ -808,6 +817,7 @@ void make_action(uint8_t that_condtion_widget, uint8_t that_number_cond, bool op
       else {
         Serial.println("Publish FAIL!client dsiconnected");
       }
+#endif
     }
     else if (act_a[that_condtion_widget][that_number_cond] == 7) { ///////////////////////////8211/////////////////////////////////////////////////
       //String openPath = "ws8211/" + String(actBtn_a_ch[that_condtion_widget][that_number_cond]);
@@ -816,9 +826,9 @@ void make_action(uint8_t that_condtion_widget, uint8_t that_number_cond, bool op
       String DataLoad_8211 = readCommonFiletoJson(String(openPath));
       char buffer[200];
       DataLoad_8211.toCharArray(buffer, sizeof buffer);
-        #if defined(ws2811_include)
+#if defined(ws2811_include)
       LoadData(buffer);//include ws2811.in
-        #endif
+#endif
       //LoadData(DataLoad_8211.c_str());
     }
     else if (act_a[that_condtion_widget][that_number_cond] == 8) { /////////////////////////WakeOnLan///////////////////////////
@@ -915,94 +925,4 @@ void switch_action(uint8_t that_condtion_widget, uint8_t that_number_cond, bool 
       break;
   }
 }
-void makeAres_sim(String json) {
-  DynamicJsonBuffer jsonBuffer;
-  JsonObject& root = jsonBuffer.parseObject(json);
-  char that_pin;
-  float that_val = 0.0F;
-  char control = 255;
-  char that_stat = 255;
-  //char that_nID;
-  String String_value = "";
-  root.containsKey("pin") ? that_pin = root["pin"] : that_pin = 255;
-  root.containsKey("stat") ? that_stat = root["stat"] : that_stat = 255;
-  //root.containsKey("read") ? that_stat = root["stat"] : that_stat = 255;
-  root.containsKey("val") ? that_val = root["val"] : that_val = -1;
-  //root.containsKey("nID") ? that_nID = root["nID"] : that_nID = 255;
-  root.containsKey("C") ? control = root["C"] : control = 255;
-  root.containsKey("st") ? String_value = root["st"].as<String>() : String_value = "";
-  switch (control) {
-    case 255: {
-        char i = 255;
-        for (char i1 = 0; i1 < nWidgets; i1++) {
-          if (that_pin == pin[i1])
-            i = i1;
-          break;
-        }
 
-        if (that_stat != 255) {
-          if  (root.containsKey("val")) {
-            stat[that_stat] = that_val;
-          } else {
-            that_val = get_new_pin_value(that_stat);//только чтение
-          }
-        }
-        if (i != 255) {
-          if ((pinmode[i] == 2) || (pinmode[i] == 1)) {//out, in
-            stat[i] = (int)that_val ^ defaultVal[i];
-            //send_IR(i);
-            digitalWrite(that_pin, stat[i]);
-          }
-          else if (pinmode[i] == 3) {//pwm
-            //unsigned int freq = PWM_frequency * 100;
-            //analogWriteFreq(freq);
-            analogWrite(that_pin, that_val);
-          }
-        }
-
-        //pubStatusFULLAJAX_String(false);
-        that_val = round(that_val * 200) / 200;
-        server.send(200, "text / json", String(that_val, DEC));
-        break;
-      }
-    case 1://PLUS Control
-      ///aRest?Json={C:0,n:2}
-      { //DynamicJsonBuffer jsonBuffer;
-        //JsonObject& json = jsonBuffer.createObject();
-        //JsonArray& PWM_json = json.createNestedArray("bySignalPWM");
-        bySignalPWM[that_pin][that_stat] = that_val;
-
-
-        //PWM_json.add(bySignalPWM[that_pin][that_nID]);
-        //that_pin-это условие
-        /*
-          for (char i1 = 0; i1 < Condition; i1++) {
-          //JsonArray& C = PWM_json.createNestedArray();
-          for (char i = 0; i < NumberIDs[i1]; i++) {
-            if (bySignalPWM[i1][i] != -1) {
-              PWM_json.add(bySignalPWM[i1][i]);
-            }
-          }
-          //PWM_json.add(Condition_json);
-          }
-        */
-        //String buffer;
-        //json.printTo(buffer);
-        //Serial.println(buffer);
-        server.send(200, "text / json",  saveConditiontoJson(that_pin));
-        break;
-      }
-    case 2: { //IR
-        send_IR(that_stat);
-        break;
-      }
-    case 3: {
-        //irsend.sendNEC(StrToHex(String_value.c_str()), 32);
-        break;
-      }
-    case 4: {
-        //        irsend.sendRaw(String_value, String_value.length(), 38);
-        break;
-      }
-  }
-}
