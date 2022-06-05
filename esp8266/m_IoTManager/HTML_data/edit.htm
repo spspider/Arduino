@@ -147,6 +147,22 @@
             var l=document.createElement("button");
             l.innerHTML='Create';
             document.getElementById(d).appendChild(l);
+            var backup = document.createElement("button");
+            backup.innerHTML = 'Backup';
+            ////////////////////////////////////
+            var strings = [window.location.hostname];
+            string1 = [strings.length+1];
+            strings.forEach(function callback(currentValue, index, array) {
+                //your iterator
+                string1[index] = document.createElement("input");
+                string1[index] .type = "text";
+                string1[index] .id = "string_value"+index;
+                string1[index] .name = "esp-devices" + index;
+                string1[index] .defaultValue = currentValue;
+                document.getElementById(d).appendChild(string1[index] );
+            });
+            ////////////////////////////////////
+            document.getElementById(d).appendChild(backup);
             function httpPostProcessRequest()
             {
                 if(h.readyState==4)
@@ -158,14 +174,22 @@
                     }
                 }
             }
-            function createPath(p)
-            {
-                h=new XMLHttpRequest();
-                h.onreadystatechange=httpPostProcessRequest;
-                var a=new FormData();
-                a.append("path",p);
-                h.open("PUT","/edit");
-                h.send(a)
+            function createPath(p) {
+                strings.forEach(function callback(currentValue, index, array) {
+                    h = new XMLHttpRequest();
+                    h.onreadystatechange = httpPostProcessRequest;
+                    var a = new FormData();
+                    a.append("path", p);
+                    //string_object_value = document.getElementById("string_value"+index).value
+                    
+                    h.open("PUT", "//" + string1[index].value + "/edit");
+                    h.send(a)
+                });
+            }
+            backup.onclick = function (e) {
+                document.getElementById('download-frame').src="/pin_setup.txt?download=true"
+                document.getElementById('download-frame').src="/other_setup.txt?download=true"
+                
             }
             l.onclick=function(e)
             {
@@ -173,18 +197,19 @@
                 createPath(j.value);
                 g.loadUrl(j.value)
             };
-            k.onclick=function(e)
-            {
-                if(i.files.length===0)
-                {
-                    return
-                }
-                h=new XMLHttpRequest();
-                h.onreadystatechange=httpPostProcessRequest;
-                var a=new FormData();
-                a.append("data",i.files[0],j.value);
-                h.open("POST","/edit");
-                h.send(a)
+            k.onclick = function (e) {
+                strings.forEach(function callback(currentValue, index, array) {
+                    if (i.files.length === 0) {
+                        return
+                    }
+                    h = new XMLHttpRequest();
+                    h.onreadystatechange = httpPostProcessRequest;
+                    var a = new FormData();
+                    a.append("data", i.files[0], j.value);
+                    //alert(string1[index].value);
+                    h.open("POST", "//" + string1[index].value + "/edit");
+                    h.send(a)
+                });
             };
             i.onchange=function(e)
             {
@@ -221,6 +246,11 @@
             function loadDownload(a)
             {
                 document.getElementById('download-frame').src=a+"?download=true"
+            }
+            function loadDownloadBackup(a)
+            {
+                document.getElementById('download-frame').src="/pin_setup.txt?download=true"
+                document.getElementById('download-frame').src="/other_setup.txt?download=true"
             }
             function loadPreview(a)
             {
@@ -558,7 +588,8 @@
             var f=createTree("tree",e);
             createFileUploader("uploader",f,e)
         }    </script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/ace/1.1.9/ace.js" type="text/javascript"
+    <!-- <script src="https://cdnjs.cloudflare.com/ajax/libs/ace/1.1.9/ace.js" type="text/javascript" -->
+    <script src="scripts/ace.min.js" type="text/javascript"
             charset="utf-8"></script>
 </head>
 <body onload="onBodyLoad();">

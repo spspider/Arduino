@@ -357,8 +357,9 @@ void FunctionHTTP() {
     if (captivePortal()) {
       delay(500);
       //captivePortal();
-      ESP.reset();
+      
     }
+    ESP.reset();
   }
   if (root.containsKey("ws2811_setup")) {//ws2811_setup
     #if defined(ws2811_include)

@@ -1,23 +1,48 @@
 //4mb 1mb 1mb
-
+//arduino 2.6.3
 //----------------------------------------defines-------------------------------//
-//#define ws2811_include// активировать для ws2811
-//#define will_use_serial
+#define ws2811_include// активировать для ws2811
+#define will_use_serial
 //#define pubClient
+//#define ds18b20
+//#define ads1115
+#define emon
 //------------------------------------------------------------------------------//
-#include <Adafruit_GFX.h>
-#include <gfxfont.h>
+
+//#include <Adafruit_GFX.h>
+//#include <gfxfont.h>
 
 //#include <WiFiManager.h>     //https://github.com/tzapu/WiFiManager WiFi Configuration Magic
-//#include <DNSServer.h>
+#include <DNSServer.h>
 #include <ESP8266mDNS.h>
 #include <ESP8266WiFi.h>
 #include <WiFiClient.h> //iotmanager
 #include <EEPROM.h>
 //#include <WiFiClientSecure.h>
+
+
+
+//###############################
+#if defined(ds18b20)
+#include <OneWire.h>
+#include <DallasTemperature.h>
+
+// Data wire is plugged into port 2 on the Arduino
+#define ONE_WIRE_BUS 2
+
+// Setup a oneWire instance to communicate with any OneWire devices (not just Maxim/Dallas temperature ICs)
+OneWire oneWire(ONE_WIRE_BUS);
+
+// Pass our oneWire reference to Dallas Temperature.
+DallasTemperature sensors(&oneWire);
+#endif
+//###############################
+
+
+
 #if defined(pubClient)
 #include <PubSubClient.h>
-  #endif
+#endif
 #include <ESP8266WebServer.h>     //Local WebServer used to 
 //////////////////////////////////compass
 //#include <AS5600.h>
@@ -79,10 +104,12 @@ DHTesp dht;
 
 ////////////////////
 ///emon//
+#if defined(emon)
 #include "EmonLib.h"                   // Include Emon Library
 EnergyMonitor emon1;                   // Create an instance
 float PowerCorrection = 111.1;
 /////////
+#endif
 #include <ESP8266SSDP.h>
 
 ///////////////////////////////////Dimmer
@@ -114,9 +141,10 @@ char password[32] = "";
 short unsigned int ipport = 80;
 /* hostname for mDNS. Should work at least on windows. Try http://esp8266.local */
 const char *myHostname = "esp8266";
+char deviceID[20] = "dev01-kitchen";   // thing ID - unique device id in our project
 #if defined(pubClient)
 char prefix[20]  = "/IoTmanager";     // global prefix for all topics - must be some as mobile device
-char deviceID[20] = "dev01-kitchen";   // thing ID - unique device id in our project
+
 char mqttServerName[25] = "m20.cloudmqtt.com";
 unsigned int mqttport = 16238;
 //String mqttuser = "spspider";
@@ -144,11 +172,6 @@ bool wifi_scan = true;
 bool ws8211_loop = true;
 bool save_stat = false;
 bool IR_recieve = false;
-
-
-
-
-
 bool loop_alarm_active = true;
 bool check_internet = true;
 short unsigned int mqttspacing = 60;
@@ -186,15 +209,17 @@ unsigned char PWM_frequency = 1;
 
 
 /////////////////////////////ads
+//ads1115
 #include <Wire.h>
+#if defined(ads1115)
 #include <Adafruit_ADS1015.h>
-
 Adafruit_ADS1015 ads(0x48);
+#endif
 ///////////////////////////////
 void setup() {
-  #if defined(will_use_serial)
+#if defined(will_use_serial)
   Serial.begin(115200);
-  #endif
+#endif
   delay(10);
   Serial.println();
   Serial.println();
@@ -239,6 +264,12 @@ void setup() {
   /////////////////////////////////////
   callback_from_stat();
 
+#if defined(ds18b20)
+  //setup_ds();
+  sensors.begin();  // Start up the library
+  //unsigned char deviceCount = sensors.getDeviceCount();
+#endif
+
 }
 void loop() {
   captive_loop();
@@ -251,9 +282,9 @@ void loop() {
     //loop_w433();
   }
   if (ws8211_loop == true) {
-      #if defined(ws2811_include)
+#if defined(ws2811_include)
     loop_ws2811();//include ws2811.in
-  #endif
+#endif
   }
 
   if (loop_alarm_active) {

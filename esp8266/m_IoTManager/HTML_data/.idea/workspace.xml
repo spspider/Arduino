@@ -3,14 +3,6 @@
   <component name="ChangeListManager">
     <list default="true" id="096f04bc-36d3-4a3f-9a07-93a77ecdab6c" name="Default Changelist" comment="">
       <change beforePath="$PROJECT_DIR$/../../examples/esp8266-arduinoide/Sonoff_Loader" beforeDir="false" afterPath="$PROJECT_DIR$/../../examples/esp8266-arduinoide/Sonoff_Loader" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../IoTmanager.ino" beforeDir="false" afterPath="$PROJECT_DIR$/../IoTmanager.ino" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../LoadSettings.ino" beforeDir="false" afterPath="$PROJECT_DIR$/../LoadSettings.ino" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../Time_alarm_string.ino" beforeDir="false" afterPath="$PROJECT_DIR$/../Time_alarm_string.ino" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../data/pin_setup.txt" beforeDir="false" afterPath="$PROJECT_DIR$/../data/pin_setup.txt" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../data/pin_setup_1.txt" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/../data/pin_setup_Entrance_door.txt" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/../m_IoTManager.ino" beforeDir="false" afterPath="$PROJECT_DIR$/../m_IoTManager.ino" afterDir="false" />
     </list>
     <option name="EXCLUDED_CONVERTED_TO_IGNORED" value="true" />
     <option name="SHOW_DIALOG" value="false" />
@@ -23,7 +15,7 @@
       <file pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/condition.htm">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="-114">
+            <state relative-caret-position="663">
               <caret line="39" selection-start-line="39" selection-end-line="42" selection-end-column="35" />
               <folding>
                 <element signature="n#style#0;n#div#0;n#body#0;n#html#0;n#!!top" expanded="true" />
@@ -58,7 +50,7 @@
       <file pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/scripts/pin_setup.js">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="810">
+            <state relative-caret-position="9894">
               <caret line="582" column="65" selection-start-line="582" selection-start-column="20" selection-end-line="582" selection-end-column="65" />
             </state>
           </provider>
@@ -67,7 +59,7 @@
       <file pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/scripts/helper_func.js">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="2266">
+            <state relative-caret-position="3553">
               <caret line="209" column="16" selection-start-line="209" selection-start-column="16" selection-end-line="209" selection-end-column="16" />
             </state>
           </provider>
@@ -94,7 +86,7 @@
       <file pinned="false" current-in-tab="true">
         <entry file="file://$PROJECT_DIR$/other_setup.htm">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="-323">
+            <state relative-caret-position="17">
               <caret line="32" selection-start-line="32" selection-end-line="36" selection-end-column="71" />
               <folding>
                 <element signature="n#style#0;n#div#0;n#div#0;n#body#0;n#html#0;n#!!top" expanded="true" />
@@ -338,16 +330,17 @@
       <workItem from="1625230674201" duration="656000" />
       <workItem from="1626504767821" duration="151000" />
       <workItem from="1626506658323" duration="723000" />
+      <workItem from="1630567823975" duration="199000" />
     </task>
     <servers />
   </component>
   <component name="TimeTrackingManager">
-    <option name="totallyTimeSpent" value="95310000" />
+    <option name="totallyTimeSpent" value="95509000" />
   </component>
   <component name="ToolWindowManager">
     <frame x="955" y="0" width="971" height="1046" extended-state="0" />
     <layout>
-      <window_info active="true" content_ui="combo" id="Project" order="0" visible="true" weight="0.34063527" />
+      <window_info active="true" content_ui="combo" id="Project" order="0" visible="true" weight="0.3483023" />
       <window_info id="Structure" order="1" side_tool="true" weight="0.25" />
       <window_info id="Favorites" order="2" side_tool="true" />
       <window_info anchor="bottom" id="Message" order="0" />
@@ -506,18 +499,12 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/pin_setup.htm">
+    <entry file="file://$PROJECT_DIR$/condition.htm">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="476">
-          <caret line="28" column="24" selection-start-line="28" selection-start-column="24" selection-end-line="28" selection-end-column="24" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/scripts/iro.min.js">
-      <provider selected="true" editor-type-id="text-editor">
-        <state>
+        <state relative-caret-position="663">
+          <caret line="39" selection-start-line="39" selection-end-line="42" selection-end-column="35" />
           <folding>
-            <element signature="n#!!doc" expanded="true" />
+            <element signature="n#style#0;n#div#0;n#body#0;n#html#0;n#!!top" expanded="true" />
           </folding>
         </state>
       </provider>
@@ -541,14 +528,14 @@
     </entry>
     <entry file="file://$PROJECT_DIR$/scripts/pin_setup.js">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="810">
+        <state relative-caret-position="9894">
           <caret line="582" column="65" selection-start-line="582" selection-start-column="20" selection-end-line="582" selection-end-column="65" />
         </state>
       </provider>
     </entry>
     <entry file="file://$PROJECT_DIR$/scripts/helper_func.js">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="2266">
+        <state relative-caret-position="3553">
           <caret line="209" column="16" selection-start-line="209" selection-start-column="16" selection-end-line="209" selection-end-column="16" />
         </state>
       </provider>
@@ -560,19 +547,25 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/condition.htm">
+    <entry file="file://$PROJECT_DIR$/pin_setup.htm">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="-114">
-          <caret line="39" selection-start-line="39" selection-end-line="42" selection-end-column="35" />
+        <state relative-caret-position="476">
+          <caret line="28" column="24" selection-start-line="28" selection-start-column="24" selection-end-line="28" selection-end-column="24" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/scripts/iro.min.js">
+      <provider selected="true" editor-type-id="text-editor">
+        <state>
           <folding>
-            <element signature="n#style#0;n#div#0;n#body#0;n#html#0;n#!!top" expanded="true" />
+            <element signature="n#!!doc" expanded="true" />
           </folding>
         </state>
       </provider>
     </entry>
     <entry file="file://$PROJECT_DIR$/other_setup.htm">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="-323">
+        <state relative-caret-position="17">
           <caret line="32" selection-start-line="32" selection-end-line="36" selection-end-column="71" />
           <folding>
             <element signature="n#style#0;n#div#0;n#div#0;n#body#0;n#html#0;n#!!top" expanded="true" />

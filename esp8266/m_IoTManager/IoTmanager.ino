@@ -77,7 +77,7 @@ uint8_t mqttspacing_oldtime;
   //char test8[nWidgetsArray][200];
 */
 // Push notifications
-
+#if defined(pubClient)
 char* setStatus ( char* s ) {
   char stat[40];
   if (type_mqtt == 0) {
@@ -90,6 +90,8 @@ char* setStatus ( char* s ) {
   }
   return stat;
 }
+
+
 char* setStatus ( int s ) {
   char stat[40];
   if (type_mqtt == 0) {
@@ -115,13 +117,11 @@ char* setStatus ( float s ) {
   }
   return stat;
 }
-void initVar() {
 
-#if defined(pubClient)
+void initVar() {
   initThingConfig();
-    #endif
 }
-#if defined(pubClient)
+
 void initThingConfig() {
   for (char i = 0; i < nWidgets; i++) {
     //sTopic_ch[i]   = prefix + "/" + deviceID + "/" + descr[i];
@@ -404,30 +404,15 @@ void callback(char* topic_char, byte * Byte, unsigned char length) {
     }
   }
 }
-#endif
 
-#if defined(pubClient)
 void setup_IOTManager() {
-
-
-  //const char *__mqttServerName = mqttServerName.c_str();
-  //const char *_payload = payload.c_str();
-
-  //Serial.println("MQTT Server:" + String(__mqttServerName) + " port:" + mqttport);
   client.setServer(mqttServerName, mqttport);
   client.setCallback(callback);
-  String  jsonConfig = readCommonFiletoJson("pin_setup");
-  if ( updatepinsetup(jsonConfig)) {
-    Serial.println("widgets Loaded");
-  }
   else {
     initVar();
   }
-
 }
-#endif
 
-#if defined(pubClient)
 void loop_IOTMAnager() {
 
   if (WiFi.status() == WL_CONNECTED) {

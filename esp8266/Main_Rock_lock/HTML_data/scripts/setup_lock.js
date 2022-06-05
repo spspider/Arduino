@@ -25,8 +25,8 @@ function toJSONString(form) {
 
 document.addEventListener("DOMContentLoaded", function () {
 
-    loadAuthentication(); //включить это
-//load();
+    //loadAuthentication(); //включить это
+load();
 });
 
 /*

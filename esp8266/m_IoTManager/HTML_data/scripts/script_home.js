@@ -372,7 +372,6 @@ function getHTML(ID) {
 
 
 function ParseAndCreateButtons(parsetext) {
-
     setHTML("demo", getHTML("demo") + "</br>");
     sTopic(parsetext.id, parsetext.topic);
     sDescr(parsetext.id, parsetext.descr);

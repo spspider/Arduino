@@ -1,94 +1,129 @@
 
 
 
-float get_new_pin_value(uint8_t i) {
+float get_new_pin_value(unsigned char i) {
 
 
-  float that_stat = 0.0f;
+  float that_stat = (float)stat[i];
+
   if (pin[i] == 255) {
+    //return that_stat;
+  }
+  if (pinmode[i] == 1) { //in
+    that_stat = digitalRead(pin[i])^defaultVal[i];
+    stat[i] = that_stat;
     return that_stat;
   }
-  //  if ((get_new_pin_value_) && (!license)) get_new_pin_value_ = false;
-  that_stat = stat[i];
-  switch (pinmode[i]) {
-    case 1://in
-      that_stat = digitalRead(pin[i])^defaultVal[i];
+  if ((pinmode[i] == 2) || (pinmode[i] == 3) || (pinmode[i] == 5)) { //out
+    // that_stat = digitalRead(pin[i])^defaultVal[i];
+    //stat[i] = that_stat;
+    return that_stat;
+  }
+  if (pinmode[i] == 4) {//adc
+    if (!license)return 127;
+    that_stat = (analogRead(17) / analogDivider) + analogSubtracter; //adc pin:A0
+    //that_stat = (analogRead(17) - analogSubtracter) / analogDivider * 1.0F;
+    stat[i] = (int)that_stat;
+    return that_stat;
+  }
+  if (pinmode[i] == 6) {//dht Temp
+    if (!license)return 127;
+    that_stat = (dht.getTemperature());
+    that_stat == 0 ? that_stat = stat[i] : that_stat;
+    return that_stat;
+  }
+  if (pinmode[i] == 7) {
+    if (!license)return 127;
+    that_stat = (float)low_pwm_off;
+    return that_stat;
+  }
+  if (pinmode[i] == 8) {//dht Hum
+    if (!license)return 127;
+    that_stat = (dht.getHumidity());
+    that_stat == 0 ? that_stat = stat[i] : that_stat;
+    return that_stat;
+  }
+  if (pinmode[i] == 9) {//remote
+    if (!license)return 127;
+    that_stat = getHttp(String(descr[i])).toFloat();
+    return that_stat;
+  }
+  if (pinmode[i] == 11) {
+    if (!license)return 127;
+    //compass
+    //      that_stat = dimmer.getPower();
+
+    //that_stat = (encoder.getAngle() - analogSubtracter) / analogDivider * 1.0F;
+    return that_stat;
+
+  }
+  if (pinmode[i] == 12) {//MAC ADRESS
+    //that_stat = stat[i] ^ 1;
+    return that_stat;
+  }
+  if (pinmode[i] == 13) {//EncA
+    that_stat = no_internet_timer;
+    return that_stat;
+  }
+  if (pinmode[i] == 14) {//EncB
+    //that_stat = stat[i] ^ 1;
+    return that_stat;
+  }
+  if (pinmode[i] == 15) {//ads
+#if defined(ads1115)
+    that_stat = (ads.readADC_SingleEnded(defaultVal[i]));
+    return that_stat;
+#endif
+#if !defined(ds18b20)
+    that_stat = -1111;
+    return that_stat;
+#endif
+  }
+  if (pinmode[i] == 16) {//ds18b20
+    //Serial.print ("stat[i]", stat[i]);
+#if defined(ds18b20)
+    sensors.requestTemperatures();
+    float tempC = sensors.getTempCByIndex(defaultVal[i]);
+    if ((tempC != DEVICE_DISCONNECTED_C) && (tempC != 0))
+    {
+      that_stat = tempC;
       stat[i] = that_stat;
-      break;
-    case 2://out
-      // that_stat = digitalRead(pin[i])^defaultVal[i];
-      //stat[i] = that_stat;
-      break;
-    case 3:
-      break;
-    case 4://adc
-      if (!license)return 127;
-      //that_stat = (analogRead(pin[i]) / analogDivider) + analogSubtracter; //adc pin:A0
-      //that_stat = (analogRead(17) - analogSubtracter) / analogDivider * 1.0F;
-      stat[i] = (int)that_stat;
-      break;
-    case 6://dht Temp
-      if (!license)return 127;
-      that_stat = (dht.getTemperature());
-      that_stat == 0 ? that_stat = stat[i] : that_stat;
-      break;
-    case 7:
-      if (!license)return 127;
-      that_stat = (float)low_pwm_off;
-      break;
-    case 8://dht Hum
-      if (!license)return 127;
-      that_stat = (dht.getHumidity());
-      that_stat == 0 ? that_stat = stat[i] : that_stat;
-      break;
-    case 9://remote
-      if (!license)return 127;
-      that_stat = getHttp(String(descr[i])).toFloat();
-      break;
+      return that_stat;
+    }
+#endif
+#if !defined(ds18b20)
+    that_stat = -1111;
+    return that_stat;
+#endif
+    return stat[i];
+  }
+
+
+  if (pinmode[i] == 10) {//PowerMeter должен быть последним, иначе ошибка jump to case label
+    if (!license)return 127;
+    // double Irms ;
+#if defined(emon)
+    that_stat = (float) emon1.calcIrms(1480); // Calculate Irms only
+    that_stat = (that_stat * 1.0F / analogDivider) + analogSubtracter;
+#endif
+    return that_stat;
+  }
+
+  /*
     case 11:
-      if (!license)return 127;
-      //compass
-      //      that_stat = dimmer.getPower();
-
-      //that_stat = (encoder.getAngle() - analogSubtracter) / analogDivider * 1.0F;
-
-
-      break;
-    case 12://MAC ADRESS
-      //that_stat = stat[i] ^ 1;
-      break;
-    case 13://EncA
-      that_stat = no_internet_timer;
-      break;
-    case 14://EncB
-      //that_stat = stat[i] ^ 1;
-      break;
-    case 15://ads
-      that_stat = (ads.readADC_SingleEnded(defaultVal[i]));
-      break;
-    case 10://PowerMeter должен быть последним, иначе ошибка jump to case label
-      if (!license)return 127;
-      // double Irms ;
-      that_stat = (float) emon1.calcIrms(1480); // Calculate Irms only
-      //that_stat = ((float)Irms * 1.0F);//  + analogSubtracter;
-      that_stat = (that_stat * 1.0F / analogDivider) + analogSubtracter;
-      //that_stat = (that_stat - analogSubtracter) / analogDivider * 1.0F;
-      break;
-
-      /*
-        case 11:
 
 
 
-        break;
-      */
-  }
+    break;
+  */
+
   //that_stat = (isnan(that_stat) || isnanf (that_stat)) ? 0 : that_stat;
-  if ((isnan(that_stat)) || ( isinf (that_stat))) {
-    that_stat =  stat[i];//0
-  }
+  //  if ((isnan(that_stat)) || ( isinf (that_stat))) {
+  //    that_stat =  stat[i];//0
+  //    return that_stat;
+  //  }
 
-  return that_stat;
+  return -123.12;
 }
 
 
@@ -144,7 +179,7 @@ void makeAres_sim(String json) {
       }
     case 1://PLUS Control
 
-      { 
+      {
         bySignalPWM[that_pin][that_stat] = that_val;
 
 

@@ -119,7 +119,7 @@ function setVal(ID, value) {
         }
         //return false;
     }
-    return false;
+    //return false;
 }
 
 function setHTML(ID, value) {

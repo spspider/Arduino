@@ -10,6 +10,7 @@ function load() {
     //alert("alert"+getParameterByName('id'));
     id = getParameterByName('id');
     //id = 1;
+
     readTextFile("/function?json={'cond_setup':1}", function (callback) {
         //readTextFile("cond_setup.txt", function (callback) {
         if (testJson(callback)) {
@@ -21,6 +22,7 @@ function load() {
         //alert(Data_limits.NUM_LEDS);
         readPinsetup();
     });
+   
     setHTML("btmBtns", bottomButtons());
 }
 
@@ -104,7 +106,7 @@ function readCondition(CondID) {
                 }
                 //              CondID++;
             } catch (e) {
-//                CondID++;
+                //                CondID++;
             }
             if (CondID < 3) {
                 CondID++;
@@ -246,7 +248,7 @@ var selected_OptionWhich = new Array();
 var selected_typeActBtn = new Array();
 selected_typeActChangeBtn = [];
 var selected_typeAct = new Array();
-var selected_SignalChange = new Array();
+var selected_bySignal = new Array();
 var selected_timerField = new Array();
 var selected_timerType = new Array();
 var selected_by_pwm = [];
@@ -264,13 +266,19 @@ var typePinsTimeChoise = [];
 var typePinsrepeats = [];
 var typeDelay = [];
 
+var typePins_minTemp = [];
+var typePins_maxTemp = [];
+var typePins_slaider = [];
+
+
+
 var type = new Array();
 var times = new Array();
 var dates = new Array();
 var act_ = new Array();
 var actBtn = new Array();
 var which = new Array();
-var pins_ = new Array();
+var selected_typePins = new Array();
 var signals = new Array();
 var actBtn_ = new Array();
 var signals_time = new Array();
@@ -284,7 +292,7 @@ function AddCondition(btnId, save_that) {
     nConditions = btnId;
     var result_which = "";
     var result_act = "";
-
+   
     if (save_that) {
         SelectedSave(btnId);
     }
@@ -301,6 +309,7 @@ function AddCondition(btnId, save_that) {
     signals[1] = "отрицательный";
     signals[2] = "больше:";
     signals[3] = "меньше:";
+    signals[4] = "множитель:";
 
     types[0] = "нет";
     types[1] = "по достижению времени";
@@ -317,6 +326,7 @@ function AddCondition(btnId, save_that) {
     act[7] = "включить ленту 8211";
     act[8] = "WOL";
     act[9] = "настроить таймер";
+    act[10] = "передвинуть слайдер";
 
     act_btn[0] = "нет";
     act_btn[1] = "1";
@@ -421,12 +431,12 @@ function deleteRow(btnId) {
     selected_time.splice(btnId);
     selected_date.splice(btnId);
     selected_timerType.splice(btnId);
-    selected_SignalChange.splice(btnId);
+    selected_bySignal.splice(btnId);
     selected_typeCondition.splice(btnId);
     selected_typeActBtn.splice(btnId);
     type.splice(btnId);
     selected_typeAct.splice(btnId);
-    pins_.splice(btnId);
+    selected_typePins.splice(btnId);
     act_.splice(btnId);
     selected_pwmTypeAct.splice(btnId);
     actBtn_.splice(btnId);
@@ -493,10 +503,10 @@ function deleteRow1(btnId) {
      selected_id_enabled.splice(i, 1);
      selected_timerField.splice(i, 1);
      selected_timerType.splice(i, 1);
-     selected_SignalChange.splice(i, 1);
+     selected_bySignal.splice(i, 1);
      selected_typeCondition.splice(i, 1);
      selected_typeAct.splice(i, 1);
-     pins_.splice(i, 1);
+     selected_typePins.splice(i, 1);
      selected_typeActBtn.splice(i, 1);
      selected_by_pwm.splice(i, 1);
      selected_time.splice(i, 1);
@@ -533,7 +543,7 @@ function makeAddbuttons(btnId) {
 function convertTimetoHMS(times) {
 
     var seconds = times;
-// multiply by 1000 because Date() requires miliseconds
+    // multiply by 1000 because Date() requires miliseconds
     var date = new Date(seconds * 1000);
     var hh = date.getUTCHours();
     var mm = date.getUTCMinutes();
@@ -548,14 +558,14 @@ function convertTimetoHMS(times) {
     if (ss < 10) {
         ss = "0" + ss;
     }
-// This formats your string to HH:MM:SS
+    // This formats your string to HH:MM:SS
     return t = hh + ":" + mm + ":" + ss;
 }
 
 function convertTimetoHM(times) {
 
     var minutes = times;
-// multiply by 1000 because Date() requires miliseconds
+    // multiply by 1000 because Date() requires miliseconds
     var date = new Date(minutes * 1000 * 60);
     var hh = date.getUTCHours();
     var mm = date.getUTCMinutes();
@@ -570,7 +580,7 @@ function convertTimetoHM(times) {
     if (ss < 10) {
         ss = "0" + ss;
     }
-// This formats your string to HH:MM:SS
+    // This formats your string to HH:MM:SS
     return t = hh + ":" + mm + ":" + ss;
 }
 
@@ -642,6 +652,14 @@ function getCondBack(act, actBtn2, i) {
                 })
             }
             break;
+        case 10:
+            arr = actBtn2.split(' ');
+            if (arr.length > 0) {
+                typePins_minTemp[i] = arr[0];
+                typePins_maxTemp[i] = arr[1];
+                typePins_slaider[i] = jsonPinSetup.descr[arr[2]];
+            }
+            break;
         default:
             return val;
     }
@@ -654,13 +672,14 @@ function createCondition(data) {
     deleteRow(0);
 
     btnId = data.tID.length;
+    
     for (var i = 0; i < data.tID.length; i++) {
         AddCondition(i, true);
     }
     nConditions = data.tID.length;
     //setHTML("loadedCondition",getHTML("loadedCondition")+"<br>addConditionOk!");
     for (var i = 0; i < data.tID.length; i++) {
-        //setHTML("test",getHTML("test") +"<br>timer:"+data.timer[i]);
+        //setHTML("test",getHTML("test") +"<br>timer:"+data.actBtn[i]);
         selected_id_enabled[i] = data.En ? data.En[i] : 0;
         selected_typeCondition[i] = data.type ? types[data.type[i]] : 0;
         selected_timerField[i] = data.times ? data.times[i] : 0;
@@ -669,8 +688,9 @@ function createCondition(data) {
         selected_typeActBtn[i] = data.actOn ? act_btn[data.actOn[i]] : 0;
         selected_time[i] = data.times ? convertTimetoHMS(data.times[i]) : 0;
         selected_date[i] = data.dates ? data.dates[i] : 0;
-        pins_[i] = data.actBtn && data.act ? getCondBack(data.act[i], data.actBtn[i], i) : 0;// data.actBtn[i];- default
-        selected_SignalChange[i] = data.bySignal ? signals[data.bySignal[i]] : 0;
+        //selected_typePins[i] = jsonPinSetup.descr[data.actBtn[i]];
+        selected_typePins[i] = data.actBtn && data.act ? getCondBack(data.act[i], data.actBtn[i], i) : 0;// data.actBtn[i];- default
+        selected_bySignal[i] = data.bySignal ? signals[data.bySignal[i]] : 0;
         selected_by_pwm[i] = data.bySignalPWM ? data.bySignalPWM[i] : 0;
         selected_pwmTypeAct[i] = data.pwmTypeAct[i];
 
@@ -751,10 +771,10 @@ function save(btnId) {
         act_[i] = act.indexOf(selected_typeAct[i]);
         actBtn_[i] = act_btn.indexOf(selected_typeActBtn[i]);
         signals_time_convInt[i] = signals_time.indexOf(selected_timerType[i]) === -1 ? 255 : signals_time.indexOf(selected_timerType[i]);
-        //if (selected_SignalChange[i]!=-1)
-        bySignal[i] = signals.indexOf(selected_SignalChange[i]);
+        //if (selected_bySignal[i]!=-1)
+        bySignal[i] = signals.indexOf(selected_bySignal[i]);
         //document.getElementById("test").innerHTML = "123"+act_;
-        pins_[i] = getPinsIfCond(act_[i], pins_[i], i);
+        selected_typePins[i] = getPinsIfCond(act_[i], selected_typePins[i], i);
         timer_field_[i] = parseInt(convertTime(selected_time)[i] === -1 ? selected_timerField[i] : convertTime(selected_time)[i]);
     }
     /*
@@ -774,7 +794,7 @@ function save(btnId) {
     }
     var time = selected_time;
     //setHTML("output_test", time);
-//setHTML("output_test",convertTimetoHMS(15457));
+    //setHTML("output_test",convertTimetoHMS(15457));
     jsonStr2["tID"] = BtnIDArray;
     jsonStr2["En"] = selected_id_enabled_bool;
     jsonStr2["times"] = timer_field_;
@@ -790,7 +810,7 @@ function save(btnId) {
     }
 
     jsonStr2["act"] = act_;
-    jsonStr2["actBtn"] = pins_;
+    jsonStr2["actBtn"] = selected_typePins;
     jsonStr2["actOn"] = actBtn_;
     jsonStr2["pwmTypeAct"] = selected_pwmTypeAct;
 
@@ -860,28 +880,33 @@ function getBool(val) {
  }
  }
  */
+
+/*
+здесь мы получаем от форм
+*/
 function getPinsIfCond(act2, def_pin, i) {
     var pin = def_pin;
-    switch (act2) {
+    switch (act2) {//например переключить кнопку, переключить пин переключить удаленную кнопку
 
         case 2://переключить кнопку
-/*
-            var thatIndex = 0;
-            if (document.getElementById("typePins" + i).selectedIndex) {
-                thatIndex = document.getElementById("typePins" + i).selectedIndex;
-            }
-            pin = thatIndex;
-*/
-            pin ="";
-            if (ButtonAddFieldClick_id > 0) {
-                for (var idCl = 0; idCl < ButtonAddFieldClick_id; idCl++) {
-                    pin += jsonPinSetup.descr.indexOf(getVal("ButtonAddField" + i + idCl));
-                    //alert("ButtonAddField" + i + idCl);
-                    //if((idCl!==0)&&(idCl!==ButtonAddFieldClick_id)){}
-                    pin=((idCl !== ButtonAddFieldClick_id-1)) ? pin += " " : pin;
-                }
-            }
 
+            /*
+                        var thatIndex = 0;
+                        if (document.getElementById("typePins" + i).selectedIndex) {
+                            thatIndex = document.getElementById("typePins" + i).selectedIndex;
+                        }
+                        pin = thatIndex;
+            */
+            pin = "";
+            // if (ButtonAddFieldClick_id > 0) {
+            //     for (var idCl = 0; idCl < ButtonAddFieldClick_id; idCl++) {
+            //         pin += jsonPinSetup.descr.indexOf(getVal("ButtonAddField" + i + idCl));
+            //         //alert("ButtonAddField" + i + idCl);
+            //         //if((idCl!==0)&&(idCl!==ButtonAddFieldClick_id)){}
+            //         pin=((idCl !== ButtonAddFieldClick_id-1)) ? pin += " " : pin;
+            //     }
+            // }
+            pin = jsonPinSetup.descr.indexOf(document.getElementById("typePins" + i).value);
             break;
 
         case 5:
@@ -925,6 +950,18 @@ function getPinsIfCond(act2, def_pin, i) {
             // getVal("typePinsTimeChoise" + i)+":"+
             //getVal("typePinsrepeats" + i);
             pin = Duration + " " + TimeChoise + " " + Pinsrepeats + " " + pinDelay;
+            break;
+        case 10:
+
+            //jsonPinSetup.descr.indexOf();
+            var typePins_minTemp_ = getVal("typePins_minTemp" + i) !== "" ? getVal("typePins_minTemp" + i) : 0;
+            var typePins_maxTemp_ = getVal("typePins_maxTemp" + i) !== "" ? getVal("typePins_maxTemp" + i) : 0;
+            var typePins_slaider_ = getVal("typePins_slaider" + i) !== "" ? getVal("typePins_slaider" + i) : 0;
+
+            typePins_slaider_ = jsonPinSetup.descr.indexOf(document.getElementById("typePins_slaider" + i).value);
+            pin = typePins_minTemp_ + " " + typePins_maxTemp_ + " " + typePins_slaider_;
+
+
             break;
     }
     return pin;
@@ -1091,7 +1128,7 @@ function typeActChange(btnId) {
             element.appendChild(makeinOption_child(array, "typePins" + btnId, false));
             break;
         case act[9]://ws8211
-                    //makeinOption_child;
+            //makeinOption_child;
             var array = [];
             var i = 0;
             while (i < 254) {
@@ -1139,6 +1176,84 @@ function typeActChange(btnId) {
             t.setAttribute("id", "NextRepeat" + btnId);
             element.appendChild(t);
             break;
+        case act[10]: //передвинуть слайдер
+            /*
+                    71 - 1024
+                        53 - 0
+            
+                        71 - 53 = 18
+            
+                        например температура 71
+                        тогда 1024/71 = 14
+                        и 14 * 71 = 1024
+                        если температура 53, то 53 * 14 = 742, а должно быть 0
+            
+                        значит если 1024/(71 - 53) = 56
+                        не подходит
+            
+                        значит (53 - 53) * 14  = 0
+                        (71 - 53) * 14 = 252, а должно быть 1024
+            
+                        1024/252 = 4
+            
+                        4 * 14 = 56
+            
+                        (71 - 53) * (1024 / (71-53)) = 1008
+                        (53 - 53) * 56 = 1008
+            
+                        (temp - Temp_min) * (1024 / (tmax-tmin)) = 
+                        */
+            //текст
+            var element = document.getElementById("OptionWhich" + btnId);
+            var t = document.createTextNode("мин темп:");     // Create a text node
+            element.appendChild(t);
+            //ввод минмальной температуры
+            var input = document.createElement("INPUT");
+            input.setAttribute("type", "number");
+            input.className = "form-control";
+            input.setAttribute("id", "typePins_minTemp" + btnId);
+            element.appendChild(input);
+            //текст
+            var element = document.getElementById("OptionWhich" + btnId);
+            var t = document.createTextNode("макс темп:");     // Create a text node
+            element.appendChild(t);
+            //ввод максимальной температуры
+            var input = document.createElement("INPUT");
+            input.setAttribute("type", "number");
+            input.className = "form-control";
+            input.setAttribute("id", "typePins_maxTemp" + btnId);
+            element.appendChild(input);
+            //текст
+            var t = document.createTextNode("слайдер:");     // Create a text node
+            element.appendChild(t);
+            //
+            //
+            filtered_widget = [];
+            if (jsonPinSetup) {
+                i1 = 0;
+                for (i = 0; i < jsonPinSetup.numberChosed; i++) {
+                    if (jsonPinSetup.widget[i] === 3) {
+                        //add_pins += "<option " + selected + " >" + jsonPinSetup.descr[i] + "</option>";
+                        filtered_widget[i1] = jsonPinSetup.descr[i];
+                        i1++;
+                    }
+                }
+            }
+            element.appendChild(makeinOption_child(filtered_widget, "typePins_slaider" + btnId, false));
+
+
+            //
+            // if (jsonPinSetup) {
+            //     for (i = 0; i < jsonPinSetup.numberChosed; i++) {
+            //         if (jsonPinSetup.widget[i] === 3) {
+            //             add_pins += "<option " + selected + " >" + jsonPinSetup.descr[i] + "</option>";
+            //         }
+            //     }
+            // }
+            // result_pins += "<select class='form-control' id='typePins" + btnId + "' onchange='typeActBtnChange(" + btnId + ");' >" + add_pins + "</select>";
+            // setHTML("OptionWhich" + btnId, getHTML("OptionWhich" + btnId) + result_pins);
+
+            break;
     }
     //typeActChange(btnId)
     typeActBtnChange(btnId);
@@ -1147,7 +1262,7 @@ function typeActChange(btnId) {
 
 }
 
-var ButtonAddFieldClick_id=0;
+var ButtonAddFieldClick_id = 0;
 
 function ButtonAddFieldClick(id_btn) {
 
@@ -1236,8 +1351,11 @@ function SignalChange(btnId) {
 
     var choised = getVal("bySignal" + btnId);
     var result_srting = "";
-    if ((choised === signals[2]) || (choised === signals[3])) {
+    if ((choised === signals[2]) || (choised === signals[3] || (choised === signals[4]))) {
         result_srting += "<input class='form-control' id='by_pwm" + btnId + "' type='text' value='' size='1'>";
+    }
+    if (choised === signals[4]) {
+        document.getElementById("output_test").append(alert_message("установить в поле делитель то число, на которое будет делится эти данные", 1000))
     }
     //document.getElementById("inputSignalChange" + btnId).innerHTML = result_srting;
     setHTML("inputSignalChange" + btnId, result_srting)
@@ -1248,10 +1366,10 @@ function SelectedLoad(btnId) {
         setVal("enabled" + i, selected_id_enabled[i]);
         setVal("timerField" + i, selected_timerField[i]);
         setVal("timerType" + i, selected_timerType[i]);
-        setVal("bySignal" + i, selected_SignalChange[i]);
+        setVal("bySignal" + i, selected_bySignal[i]);
         setVal("typeCondition" + i, selected_typeCondition[i]);
         setVal("typeAct" + i, selected_typeAct[i]);
-        setVal("typePins" + i, pins_[i]);
+        setVal("typePins" + i, selected_typePins[i]);
         setVal("typeActBtn" + i, selected_typeActBtn[i]);
         setVal("typeActChangeBtn" + i, selected_typeActChangeBtn[i]);
         setVal("by_pwm" + i, selected_by_pwm[i]);
@@ -1268,6 +1386,10 @@ function SelectedLoad(btnId) {
         setVal("typePinsrepeats" + i, typePinsrepeats[i]);
         setVal("typeDelay" + i, typeDelay[i]);
 
+        setVal("typePins_minTemp" + i, typePins_minTemp[i]);
+        setVal("typePins_maxTemp" + i, typePins_maxTemp[i]);
+        setVal("typePins_slaider" + i, typePins_slaider[i]);
+
 
     }
 
@@ -1283,13 +1405,13 @@ function SelectedSave(btnId) {
         selected_time[i] = getVal("times" + i);
         selected_date[i] = getVal("dates" + i);
         selected_timerType[i] = getVal("timerType" + i);
-        selected_SignalChange[i] = getVal("bySignal" + i);
+        selected_bySignal[i] = getVal("bySignal" + i);
         selected_typeCondition[i] = getVal("typeCondition" + i);
         selected_typeActBtn[i] = getVal("typeActBtn" + i);
         selected_typeActChangeBtn[i] = getVal("typeActChangeBtn" + i);
         type[i] = types.indexOf(selected_typeCondition[i]);
         selected_typeAct[i] = getVal("typeAct" + i);
-        pins_[i] = getVal("typePins" + i);
+        selected_typePins[i] = getVal("typePins" + i);
         act_[i] = act.indexOf(selected_typeAct[i]);
         selected_pwmTypeAct[i] = getVal("pwmTypeAct" + i);
 
@@ -1301,6 +1423,11 @@ function SelectedSave(btnId) {
         //typePinsTimeChoise[i] = getVal("typePinsTimeChoise" + i);
         typePinsrepeats[i] = getVal("typePinsrepeats" + i);
         typeDelay[i] = getVal("typeDelay" + i);
+
+        typePins_minTemp[i] = getVal("typePins_minTemp" + i);
+        typePins_maxTemp[i] = getVal("typePins_maxTemp" + i);
+        typePins_slaider[i] = getVal("typePins_slaider" + i);
+
         //typePinsDuration
         //typePinsTimeChoise
         //typePinsrepeats

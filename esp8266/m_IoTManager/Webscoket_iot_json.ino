@@ -33,24 +33,31 @@ void callback_scoket(char i, int payload_is) {
     return;
   }
 
-  stat[i] = (payload_is);// ^ defaultVal[i]
-    //if(pin[i]==255){
-    //return;
-    //}
+
+  //  if (i == 0) {
+  //    Serial.println("rewrite 0 !!!!!!!!!!!!!!!!!!!!!!!")
+  //  }
+  //if(pin[i]==255){
+  //return;
+  //}
   if ((pinmode[i] == 2) || (pinmode[i] == 1)) { //out,in - saveEEPROM=false;
     //Serial.println("SendIR");
     //send_IR(i);
+    stat[i] = (payload_is);// ^ defaultVal[i]
     digitalWrite(pin[i], stat[i]);
     check_if_there_timer_once(i);
+    
   } else if (pinmode[i] == 3) {//pwm
     if (!license)return;
+    payload_is = defaultVal[i] == 1 ? 1024 - payload_is : payload_is;
     analogWrite(pin[i], payload_is);
+    stat[i] = defaultVal[i] == 1 ? 1024 - payload_is : payload_is;
   }
   else if (pinmode[i] == 5) {//low_pwm
     if (!license)return;
     //String x = payload_is;
     low_pwm[i] = payload_is;
-
+    stat[i] = (payload_is);// ^ defaultVal[i]
   }
   else if (pinmode[i] == 4) { //adc
   }
@@ -58,15 +65,13 @@ void callback_scoket(char i, int payload_is) {
     if (!license)return;
     const char* mac_adress = (const char *)descr;
     wakeMyPC(mac_adress);
+
     //stat[i]=stat[i]^1;
   }
   else if (pinmode[i] == 11) {//Dimmer
     //DimmerVal = payload_is;
     //dimmer.setPower(DimmerVal);
   }
-  //}
-
-  //}
 
   //check_for_changes();
   pubStatusFULLAJAX_String(false);
@@ -116,12 +121,7 @@ bool loop_pwm() {
 void pubStatusFULLAJAX_String(bool save_eeprom) { //отправка на сервер _nobuffer
   String stat1 = "{\"stat\":[";
   for (char i = 0; i < nWidgets; i++) {
-    float that_stat = 0.0F;
-    that_stat = stat[i];
-    that_stat = get_new_pin_value(i);
-    //that_stat = that_stat ^ defaultVal(i);
-    //get_new_pin_value()
-    stat[i] = (int)that_stat;
+    float that_stat = get_new_pin_value(i);
     stat1 += String(that_stat, 2);
     stat1 += (i < nWidgets - 1) ? "," : "]";
   }

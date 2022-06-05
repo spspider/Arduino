@@ -1,4 +1,4 @@
-﻿var max_number_chosed = 8;
+﻿var max_number_chosed = 12;
 
 function loadlimits() {
     readTextFile("/function?json={pin_setup_limits:1}", function (callback) {
@@ -6,13 +6,14 @@ function loadlimits() {
          if (callback!==404){
             max_number_chosed = callback !== parseInt(callback) ? parseInt(callback) : 8;}
          else{
-             max_number_chosed = 8;}
+             max_number_chosed = 12;}
         } catch (e) {
-            max_number_chosed = 8;
+            max_number_chosed = 12;
         }
         Activation_check();
 
     });
+    
     setHTML("btmBtns", bottomButtons());
 }
 
@@ -80,6 +81,7 @@ inputPinmode[12] = "MAC adress";
 inputPinmode[13] = "EncA";
 inputPinmode[14] = "EncB";
 inputPinmode[15] = "ads1117";
+inputPinmode[16] = "ds18b20";
 //inputPinmode[9] = "zero-cross вход";
 //inputPinmode[10] = "PWM AC";
 
@@ -313,6 +315,7 @@ function makeInputs() {
     //setHTML("sel1div", "<select class='form-control' id='sel1' onchange='makeInputs();'>" + add_option + "</select>");
     setHTML("sel1div", makeinOption(array_selected, "sel1", "makeInputs()"));
     setVal("sel1", numberChosed);
+    //setHTML("sel1",numberChosed)
 }
 
 function set(jsonStr) {
@@ -333,13 +336,13 @@ function set(jsonStr) {
 
     var result_table =
         "<tr>" +
-        "<td >one_string</td>" +
+        "<td >one_st</td>" +
 
         "<td >descr</td>" +
         "<td >widget</td>" +
-        "<td>pin</td>" +
+        "<td>_pin__</td>" +
         "<td>IR</td>" +
-        "<td >default</td>" +
+        "<td >def</td>" +
         "<td>cond</td>" +
         "</tr>";
     for (var i1 = 0; i1 < numberChosed; i1++) {
@@ -414,7 +417,7 @@ function set(jsonStr) {
         document.getElementById("Inputs_defaultVal_table" + i).innerHTML += "<input type='text' class='form-control' id='string_defaultVal" + i + "'value='" + defaultVal + "'</input>";
         //setHTML("Inputs_delimeter_table" + i, "<input type='text' class='form-control' id='string_delimeterVal" + i + "'value='" + string_delimeterVal_saved[i] + "'</input>");
         if (i < 3) {
-            document.getElementById("condition_table" + i).innerHTML += "<a  class='btn btn-primary btn-xs' href=/condition.htm?id='>условие:" + i + "</a><br>";
+            document.getElementById("condition_table" + i).innerHTML += "<a  class='btn btn-primary btn-xs' href=/condition.htm?id='>:" + i + "</a><br>";
         }
         setHTML("MQTT_adress" + i, "<div title='" + MQTT_adress + "'><p>?</p></div>");
 
@@ -608,6 +611,10 @@ function choisedPinmode(i, makeInput) {
             case inputPinmode[15]: //ads
                 //alert(document.getElementById("string_defaultVal"+i).appendChild(alert_message("enter Number pin there")));
                 document.getElementById("output").appendChild(alert_message("enter Number pin in Default"));
+                break;
+            case inputPinmode[16]: //ds18b20
+                //alert(document.getElementById("string_defaultVal"+i).appendChild(alert_message("enter Number pin there")));
+                document.getElementById("output").appendChild(alert_message("enter number by index in Default, connect ds18b20 to GPI02(D4)",30));
                 break;
         }
 

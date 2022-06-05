@@ -9,8 +9,8 @@
 
 */
 // DNS server
-//const byte DNS_PORT = 53;
-//DNSServer dnsServer;
+const byte DNS_PORT = 53;
+DNSServer dnsServer;
 
 //unsigned char softap_stations_cnt;
 //struct station_info *stat_info;
@@ -58,8 +58,8 @@ void captive_setup() {
   ESP_busy = true;
 
   /* Setup the DNS server redirecting all the domains to the apIP */
-  //dnsServer.setErrorReplyCode(DNSReplyCode::NoError);
-  //dnsServer.start(DNS_PORT, "*", apIP);
+  dnsServer.setErrorReplyCode(DNSReplyCode::NoError);
+  dnsServer.start(DNS_PORT, "*", apIP);
 
   server_init();
   Captive_server_init();
@@ -118,7 +118,8 @@ void connectWifi(char ssid_that[32], char password_that[32]) {
   int connRes = WiFi.waitForConnectResult();
   Serial.print ( "connRes: " );
   Serial.println ( connRes );
-  if ((connRes == 1) || (connRes == 0)) {
+  if (connRes != 3) {
+    Serial.print ( "will write access point due connection result is not 3" );
     connect_as_AccessPoint();
   }
 
@@ -190,7 +191,7 @@ void captive_loop() {
     }
   }
   if ((!try_MQTT_access) && (WiFi.status() == WL_CONNECTED) && (WiFi.getMode() == WIFI_STA)) {
-    if (onesec > no_internet_timer + 30 ) {//пробовать подключится каждые30 сек
+    if (onesec > no_internet_timer + 300 ) {//пробовать подключится каждые30 сек
       try_MQTT_access = true; //пробуем подключить MQTT
       Serial.println("Connect again");
       no_internet_timer = onesec;
@@ -202,11 +203,7 @@ void captive_loop() {
     uint8_t s = WiFi.status();
 
     if ( onesec > lastConnectTry + 60 ) {
-      //if (((s == 0) || (s == 6) )) { //или нет подключения, или подключен как точка доступа
       if (((s == 0) || (s == 6) )) { //или нет подключения, или подключен как точка доступа
-        /* If WLAN disconnected and idle try to connect */
-        /* Don't set retry time too low as retry interfere the softAP operation */
-
         if (WiFi.getMode() != WIFI_AP ) {//
           WiFi.disconnect();
           Serial.println ( "Wrong connection" );
@@ -215,8 +212,8 @@ void captive_loop() {
           relayRouter();//если нет вещания, значит нужно переключить роутер
           return;
         }
-        //else if (((WiFi.getMode() == WIFI_AP)  && (WiFi.softAPgetStationNum() == 0)) && (wifi_scan)) {
-        else if ((WiFi.getMode() == WIFI_AP) && (wifi_scan)) {
+        else if (((WiFi.getMode() == WIFI_AP)  && (wifi_softap_get_station_num() == 0)) && (wifi_scan)) {
+        //else if ((WiFi.getMode() == WIFI_AP) && (wifi_scan)) {
           Serial.println("Connect Creditnails");
 
           if (load_ssid_pass()) {
@@ -337,7 +334,7 @@ void captive_loop() {
   //
   //HTTP
 
-  //dnsServer.processNextRequest();
+  dnsServer.processNextRequest();
   server.handleClient();
 
 }

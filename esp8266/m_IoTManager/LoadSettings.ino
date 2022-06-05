@@ -39,24 +39,14 @@ bool loadConfig(String  jsonConfig) {
     //Serial.print("softAP_ssid"); Serial.println(softAP_ssid);
     //Serial.print("softAP_password"); Serial.println(softAP_password);
   }
-  if (root.containsKey("iot_enable")) {
-    #if defined(pubClient)
-    IOT_Manager_loop = root["iot_enable"];
-    if (IOT_Manager_loop) {
-      client.disconnect();
-    }
-    #endif
-  }
+
   if (root.containsKey("ssid")) {
     //const char* ssid_string = root["ssid"];
     strcpy(ssid, root["ssid"]);
     //const char* password_string = root["password"];
     strcpy(password, root["password"]);
   }
-  if (root.containsKey("prefix")) {
-    //prefix = root["prefix"].as<String>();
-    strcpy(prefix, root["prefix"]);
-  }
+
   if (root.containsKey("deviceID")) {
     // String softAP_ssid_string = root["deviceID"].as<String>();
     //const char* softAP_ssid_constChar = root["deviceID"];
@@ -68,6 +58,14 @@ bool loadConfig(String  jsonConfig) {
   }
 
   //mqttServerName = root["mqttServerName"].as<String>();
+#if defined(pubClient)
+
+  IOT_Manager_loop = root["iot_enable"];
+  if (IOT_Manager_loop) {
+    client.disconnect();
+  }
+
+  strcpy(prefix, root["prefix"]);
   strcpy(mqttServerName, root["mqttServerName"]);
   root.containsKey("mqttport") ? mqttport = root["mqttport"] : mqttport = 1883;
   //mqttuser = root["mqttuser"].as<String>();
@@ -78,7 +76,8 @@ bool loadConfig(String  jsonConfig) {
   //mqttpass = root["mqttpass"].as<String>();
   strcpy(mqttuser, root["mqttuser"]);
   strcpy(mqttpass, root["mqttpass"]);
-
+  root.containsKey("mqttspacing") ? mqttspacing = root["mqttspacing"] : mqttspacing = 60;
+#endif
   const char *buff_smtp_arr = root["smtp_arr"]; snprintf(smtp_arr, sizeof smtp_arr, "%s", buff_smtp_arr); // strncpy(smtp_arr, buff_smtp_arr, strlen(buff_smtp_arr));
   smtp_arr[sizeof(smtp_arr) - 1] = '\0';
 
@@ -90,7 +89,7 @@ bool loadConfig(String  jsonConfig) {
   password_email =  (root["password_email"].as<String>());
 
   //root.containsKey("ipport") ? ipport = root["ipport"] : ipport = 80;
-  root.containsKey("mqttspacing") ? mqttspacing = root["mqttspacing"] : mqttspacing = 60;
+
   root.containsKey("timezone") ? timezone = root["timezone"] : timezone = 2;
   root.containsKey("geo_enable") ? geo_enable = root["geo_enable"] : geo_enable = 0;
   root.containsKey("wifi_scan") ? wifi_scan = root["wifi_scan"] : wifi_scan = 1;
@@ -102,9 +101,15 @@ bool loadConfig(String  jsonConfig) {
   root.containsKey("IR_recieve") ? IR_recieve = root["IR_recieve"] : IR_recieve = 0;
   unsigned int freq = PWM_frequency * 100;
   analogWriteFreq(freq);
-  #if defined(pubClient)
+#if defined(pubClient)
   setup_IOTManager();
-  #endif
+#endif
+
+  String jsonConfig_string = readCommonFiletoJson("pin_setup");
+  if (updatepinsetup(jsonConfig_string)) {
+    Serial.println("widgets Loaded");
+  }
+
   return true;
 }
 
@@ -113,12 +118,13 @@ void Setup_pinmode(bool stat_loaded) {
 
     stat[i] = stat_loaded ? stat[i] : defaultVal[i];
     if (pin[i] != 255) {
+      callback_scoket(i, stat[i]);
       //callback_scoket(char i, int payload_is);
       ///////
-      if (((pin[i] >= 6) && (pin[i] <= 9))) {
-        //if (((pin[i] >= 6) && (pin[i] <= 9)) || (pin[i] == 255)) {
-        break;
-      }
+      //      if (((pin[i] >= 6) && (pin[i] <= 9))) {
+      //        //if (((pin[i] >= 6) && (pin[i] <= 9)) || (pin[i] == 255)) {
+      //        break;
+      //      }
       if (pinmode[i] == 1) {//in
         defaultVal[i] == 0 ? pinMode(pin[i], INPUT_PULLUP) : pinMode(pin[i], INPUT);
         stat[i] = (digitalRead(pin[i] ^ defaultVal[i]));
@@ -164,7 +170,9 @@ void Setup_pinmode(bool stat_loaded) {
 
       if (pinmode[i] == 10) { //powerMeter
         //pinMode(pin[i], OUTPUT);
+#if defined(emon)
         emon1.current(17, PowerCorrection);//PowerCorrection=111.1
+#endif
       }
       if (pinmode[i] == 11) { //compass
 
@@ -178,7 +186,9 @@ void Setup_pinmode(bool stat_loaded) {
         //attachInterrupt(digitalPinToInterrupt(pin[i]), doEncoderB, CHANGE);
       }
       if (pinmode[i] == 15) { //ads
+#if defined(ads1115)
         ads.begin();
+#endif
       }
 
     }
@@ -227,7 +237,7 @@ bool saveCommonFiletoJson(String pagename, String json, boolean write_add) {
     Serial.println("Failed to open " + pagename + ".txt for writing");
     return false;
   }
-  Serial.println("SAVE: " + String(write_add, DEC));
+  Serial.println("#############################SAVE: " + String(write_add, DEC));
   Serial.println(json);
   configFile.print(json);
   configFile.close();
@@ -258,7 +268,7 @@ bool updatepinsetup(String jsonrecieve) {
   JsonObject& rootjs = jsonBuffer.parseObject(jsonrecieve);
   unsigned char numberChosed = rootjs["numberChosed"];
   if (numberChosed == 0) {
-    Serial.println("FAIL!! numberChosed = 0");
+    Serial.println("!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!FAIL!! numberChosed = 0");
     return false;
   }
   if (numberChosed > nWidgetsArray) {
@@ -274,8 +284,8 @@ bool updatepinsetup(String jsonrecieve) {
     unsigned int defaultValJS  = rootjs["defaultVal"][i];    defaultVal[i] = defaultValJS;
     char IrButtonIDJS  = rootjs["IrBtnId"][i];               IrButtonID[i] = IrButtonIDJS;
     id[i] = i;
-    
-    strncpy( descr[i], rootjs["descr"][i],sizeof(descr[i])-1);
+
+    strncpy( descr[i], rootjs["descr"][i], sizeof(descr[i]) - 1);
     //sprintf(descr[i], "%19s", rootjs["descr"][i]);//instead of strcpy( descr[i], rootjs["descr"][i]);
     //snprintf( a, sizeof( a ), "%d", 132 );  // when a is array, not pointer
 
@@ -285,13 +295,14 @@ bool updatepinsetup(String jsonrecieve) {
   analogSubtracter = rootjs["aSusbt"];
   pwm_delay_long = rootjs["PWM_interval"];
   //  PowerCorrection = rootjs["PCorr"];
+#if defined(emon)
   rootjs.containsKey("PCorr") ? PowerCorrection = rootjs["PCorr"] : PowerCorrection = 111.1;
-
+#endif
   rootjs.containsKey("router") ? router = rootjs["router"] : router = 255;
   //Serial.println("ROUTER!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!"+String(router,DEC));
 #if defined(pubClient)
   initThingConfig();
-  #endif
+#endif
   Setup_pinmode(load_stat());
 
   return true;
@@ -303,9 +314,9 @@ bool load_stat() {
   JsonObject& root_stat = jsonBuffer_stat.parseObject(stat1);
   if (!root_stat.success()) {
     Serial.println("PARSE FAIL!!");
-    for (char i = 0; i < nWidgets; i++) {
-      stat[i] = 0;
-    }
+    //    for (char i = 0; i < nWidgets; i++) {
+    //      stat[i] = 0;
+    //    }
     return false;
   }
   for (char i = 0; i < nWidgets; i++) {

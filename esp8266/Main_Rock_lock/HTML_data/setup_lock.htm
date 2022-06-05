@@ -59,7 +59,7 @@
                            placeholder='lock_pin' name='lock_pin'/>
                 </td><td>сигнал на открытие</td>
                 <td>
-                    <input type='text' value="{{lock_pin_invert}}" class="form-control"
+                    <input type='text' value="{{lock_pin_invert}}" class="form-control" alt="может быть 0 - если сигнал должен быть положительным(+) и 1 - если сигнал будет отрицательным(-)"
                            placeholder='lock_pin_invert' name='lock_pin_invert'/>
                 </td>
             </tr>
@@ -83,6 +83,15 @@
                 <td>
                     <input type='text' value="{{reg}}" class="form-control"
                            placeholder='reg' name='reg'/>
+                </td>
+            </tr>
+            <tr>
+                <td>
+                 пин 433
+                </td>
+                <td>
+                    <input type='text' value="{{w433rcv}}" class="form-control"
+                           placeholder='w433rcv' name='w433rcv'/>
                 </td>
             </tr>
             <tr>
@@ -144,9 +153,14 @@
     <a href="WiFiClient">
         <button>WifiSTA</button>
     </a>
+    <a href="setup_433.htm">
+        <button>setup 433</button>
     </a><br>
     <a href="recordCard">
         <button>Запись карты</button>
+    </a>
+    <a href="edit.htm">
+        <button>edit</button>
     </a>
     <pre id="input"></pre>
     <pre id="output"></pre>

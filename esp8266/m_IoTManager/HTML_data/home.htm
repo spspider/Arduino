@@ -10,9 +10,11 @@
 
     <!--<script type="text/javascript" src="graphs.js"></script>-->
     <script defer type="text/javascript" src="scripts/helper_func.js"></script>
-    <script type="text/javascript" src="//cdnjs.cloudflare.com/ajax/libs/Chart.js/2.7.1/Chart.min.js"></script>
+    <!-- <script type="text/javascript" src="//cdnjs.cloudflare.com/ajax/libs/Chart.js/2.7.1/Chart.min.js"></script> -->
+    <script type="text/javascript" src="scripts/chart.min.js"></script>
+    
     <script type="text/javascript" src="scripts/script_home.js?modified=20012009"></script>
-
+    <!-- https://www.chartjs.org/dist/master/chart.min.js -->
     <title id="title">Dev</title>
 
     <meta name="viewport" http-equiv="Content-Type" content="width=device-width, initial-scale=1, charset=utf-8"/>
@@ -29,7 +31,7 @@
         loadBootstrap();
         if (typeof Chart === 'undefined') {
             loadjQuery("scripts/chart.min.js", function () {
-                firstload();
+                //firstload();
             });
         }
 

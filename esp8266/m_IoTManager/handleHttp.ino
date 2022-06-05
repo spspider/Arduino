@@ -15,9 +15,9 @@ String sendHead() {
   return Page_head;
 }
 void handleRoot() {
-  if (captivePortal()) { // If caprive portal redirect instead of displaying the page.
-    // return;
-  }
+  //  if (captivePortal()) { // If caprive portal redirect instead of displaying the page.
+  //    return;
+  //  }
   sendMyheader();
 
   String Page = sendHead();
@@ -43,15 +43,15 @@ void handleRoot() {
   server.send(200, "text / html", Page);
 }
 boolean captivePortal() {
-  //if (!isIp(server.hostHeader()) && server.hostHeader() != (String(myHostname) + ".local")) {
+  if (!isIp(server.hostHeader()) && server.hostHeader() != (String(myHostname) + ".local")) {
     Serial.println("Request redirected to captive portal");
     //server.sendHeader("Location", String("http://") + toStringIp(server.client().localIP()), true);
     server.sendHeader("Location", String("/"), true);
     server.send(302, "text/plain", "");   // Empty content inhibits Content-length header so we have to close the socket ourselves.
     server.client().stop(); // Stop is needed because we sent no content length
     return true;
-  //}
-  //return false;
+  }
+  return false;
 }
 void handleWifilist() {
   DynamicJsonBuffer jsonBuffer;
@@ -169,51 +169,42 @@ void save_wifiList(String s, String p) {
     return;
   }
   char num = rootjs["name"].size();
-  //char last = rootjs.containsKey("last") ? rootjs["last"] : 0;
-
-  //for (unsigned char i = 0; i < num; i++) {
-  //size_t destination_size = sizeof (NameWifi[i]);
-  //strncpy(NameWifi[i], json["num"][i], destination_size);
-  //NameWifi[destination_size - 1] = '\0';
-  //}
-
-  //unsigned char free_Index = 255;
-  bool  ssid_not_found = false;
+  bool  ssid_not_found = true;
+  bool write_array = false;
   for (unsigned char i = 0; i < num; i++) {
 
-    //    name_array.remove();
-    //      pass_array.remove();
-    //if (strcmp(rootjs["name"][i], bufName) == 0) {
     char nameWifi[20];
     char passWifi[20];
     strcpy(nameWifi, rootjs["name"][i]);
     strcpy(passWifi, rootjs["pass"][i]);
-   // Serial.print ("ssid:");
-   // Serial.println (ssid);
-   // Serial.print ("name:");
-   // Serial.println (nameWifi);
-    if ((strcmp (nameWifi, ssid) != 0) || (strcmp (passWifi, password) != 0)) {//не совпадают
-      ssid_not_found = true;
-      //Serial.println("not equal ssid");
-      //if  (nameWifi != s) {
+
+    //name_array.add(rootjs["name"][i]);
+
+    if ((strcmp (nameWifi, ssid) == 0) && (strcmp (passWifi, password) != 0)) { //совпадают ssid но не совпадает пароль
+      Serial.println("update ssid password");
+      //need update
+      name_array.add(rootjs["name"][i]);
+      pass_array.add(password);
+      write_array = true;
+      //break;
+    } else {
+      Serial.println("write ssd as previous");
       name_array.add(rootjs["name"][i]);
       pass_array.add(rootjs["pass"][i]);
-    } else {
-      ssid_not_found = false;//совпадение
     }
+    
+    if (strcmp (nameWifi, ssid) != 0) { //ни разу не совпал ssid
+      ssid_not_found = false;
+    }
+
   }
-  //name_array.remove(i);
-  //pass_array.remove(i);
   if (ssid_not_found ) {
-    if (num > 10) {
-    //  name_array.remove();
-  //    pass_array.remove();
-    }
+    Serial.println("add new ssd");
     name_array.add(ssid);
     pass_array.add(password);
-
-    //  rootjsCreate["num"] = num;
-    // rootjsCreate["last"] = last;
+    write_array = true;
+  }
+  if (write_array) {
     String buffer;
     rootjsCreate.printTo(buffer);
     //Serial.println(buffer);
@@ -225,6 +216,7 @@ void save_wifiList(String s, String p) {
   //  saveCommonFiletoJson("wifilist", "{num : 1, last : 0, name : [" + String(s) + "], pass : [" + String(p) + "]}");
   //}
 }
+
 /*
   String *read_wifiList(unsigned char index) {
   String WifiList = readCommonFiletoJson("wifilist");

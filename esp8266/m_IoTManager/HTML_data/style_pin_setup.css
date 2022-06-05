@@ -22,11 +22,11 @@ input:invalid + input[type=submit] {
 }
 
 .col-sm-2 {
-  padding: 1px;
+  padding: 30px;
 }
 
 .col-sm-1 {
-  padding: 1px;
+  padding: 30px;
 }
 /* device */
 .block {

@@ -54,8 +54,9 @@ extern "C" {
 #include <user_interface.h>
 }
 void setup() {
+  Serial.begin(115200);
   setup_FS();
-
+  
   if (loadConfig(readCommonFiletoJson("setup_lock"))) {}
   setup_captive();
   setup_w433();
