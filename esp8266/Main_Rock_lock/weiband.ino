@@ -8,7 +8,9 @@ void setup_wg() {
   //   default Wiegand Pin 2 and Pin 3 see image on README.md
   //  for non UNO board, use wg.begin(pinD0, pinD1) where pinD0 and pinD1
   //  are the pins connected to D0 and D1 of wiegand reader respectively.
-  wg.begin(wgD0, wgD1);
+  if ((wgD0 != 255) || (wgD1 != 255)) {
+    wg.begin(wgD0, wgD1);
+  }
 }
 void CheckFileLinebyLine() {
   char readfile_ch[200];
@@ -28,33 +30,34 @@ bool searchinfile(char search_ch[20], String where) {
 }
 
 void loop_wg() {
-  
-  if (wg.available())
-  {
-    char buffer[20];
-    sprintf (buffer, "%X\n", wg.getCode());
-    bool searched = searchinfile(buffer, readCommonFiletoJson("wg"));
+  if ((wgD0 != 255) || (wgD1 != 255)) {
+    if (wg.available())
+    {
+      char buffer[20];
+      sprintf (buffer, "%X\n", wg.getCode());
+      bool searched = searchinfile(buffer, readCommonFiletoJson("wg"));
 
-    if (record_card == 1) {
-      if (searched) {
-        Serial.println("founded!");
+      if (record_card == 1) {
+        if (searched) {
+          Serial.println("founded!");
+        } else {
+          saveCommonFiletoJson("wg", buffer, 0);
+          Serial.println("recordered!");
+        }
       } else {
-        saveCommonFiletoJson("wg", buffer, 0);
-        Serial.println("recordered!");
+        if (searched) {
+          open_lock();
+        }
       }
-    } else {
-      if (searched) {
-        open_lock();
+      Serial.print("Wiegand DEC = ");
+      Serial.print(buffer);
+      //    Serial.print(", DECIMAL = ");
+      //    Serial.print(wg.getCode());
+      //    Serial.print(", Type W");
+      //    Serial.println(wg.getWiegandType());
+      if (wg.getCode() == 12740413) {
+        //      String pos = getHttp("192.168.1.103:8080/call");
       }
-    }
-    Serial.print("Wiegand DEC = ");
-    Serial.print(buffer);
-    //    Serial.print(", DECIMAL = ");
-    //    Serial.print(wg.getCode());
-    //    Serial.print(", Type W");
-    //    Serial.println(wg.getWiegandType());
-    if (wg.getCode() == 12740413) {
-      //      String pos = getHttp("192.168.1.103:8080/call");
     }
   }
 }

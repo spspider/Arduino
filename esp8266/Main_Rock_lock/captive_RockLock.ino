@@ -120,6 +120,7 @@ void setup_captive() {
   server.on("/WifiSTA", []() {
     connectAsAp = false;
     connect = true;
+    connectWifi();
     server.send(200, "text/plain", "WiFi.localIP():" + WiFi.localIP());
   });
   server.on("/recordCard", []() {

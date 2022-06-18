@@ -1,5 +1,5 @@
 {
-  "ssid": "mi",
+  "ssid": "Home",
   "password": "sp5506487sp",
   "softAP": "RockLock",
   "softAP_pass": "12345678",
@@ -8,7 +8,7 @@
   "open_timer": "1",
   "count_timer_lock_anyway": "40",
   "reg": "0",
-  "w433rcv": "4",
+  "w433rcv": "255",
   "login_Authentication": "admin",
   "pass_Authentication": "admin",
   "connectAsAp": "{{connectAsAp}}",

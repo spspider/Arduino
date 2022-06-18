@@ -18,14 +18,14 @@ function load2() {
 
         try {
             //IRjson={};
-
+            //document.getElementById("test").innerHTML += text;
             IRjson = JSON.parse(text);
             //IRjson.code === undefined ? IRjson.code = [] : {};
             makeIRList(IRjson);
             //document.getElementById("codelist").innerHTML += IRjson.code[0];
         } catch (e) {
             makeIRList(IRjson);
-            // document.getElementById("test").innerHTML += "JSON.parse: " + e;
+            //document.getElementById("test").innerHTML += "JSON.parse: " + e;
 
         }
     });
@@ -51,8 +51,17 @@ function httpDelete(a) {
     xmlHttp.open("DELETE", "/edit");
     xmlHttp.send(b);
 }
-function deleteRow(i) {
-    IRjson.code.splice(i, 1);
+function deleteRow(value) {
+
+    arr = IRjson.code;
+    for( var i = 0; i < arr.length; i++){ 
+    
+        if ( arr[i] == value) { 
+            //alert(arr[i]);
+            IRjson.code.splice(i, 1); 
+        }
+    
+    }
     makeIRList(IRjson);
     //httpDelete("/IrRaw_Code" + i + ".txt");
 }
@@ -80,7 +89,7 @@ function makeIRList(IRjson) {
                     "<td id='number'>" + i + "</td>" +
                     "<td id='code'>" + IRjson.code[i - 1] + "</td>" +
                     // "<td id='rawID'>" + IRjson.rawID[i] + "</td>" +
-                    "<td id='del'><button class='form-control' onclick='deleteRow(" + i + ")'>X</button></td>" +
+                    "<td id='del'><button class='form-control' onclick='deleteRow(" + IRjson.code[i - 1] + ")'>X</button></td>" +
                     "</tr>";
             }
         }

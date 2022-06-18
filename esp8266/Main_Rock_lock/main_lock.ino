@@ -1,4 +1,5 @@
 unsigned long check_interval;
+unsigned long check_interval2;
 
 bool count_lock_timer;
 unsigned char number_client;
@@ -34,6 +35,14 @@ void calculate_minutes_fo_open() {
   }
 }
 void loop_lock() {
+  if (millis() > check_interval2 + 100L ) {
+    if (count_lock_timer) {
+      lock_timer++;
+      //timer_lock_anyway++;
+    }
+
+    check_interval = millis();
+  }
   if (millis() > check_interval + 1000L ) {
     //client_status();
     if ((open_type == 1) || (open_type == 2)) {
@@ -100,6 +109,7 @@ void open_lock() {
   lock_opened = true;
   count_lock_timer = true;
   digitalWrite(lock_pin, 1 ^ lock_pin_invert);
+  delay(500);
   Serial.println("замок открыт");
   //  playWavFile("opened.wav");
 }
