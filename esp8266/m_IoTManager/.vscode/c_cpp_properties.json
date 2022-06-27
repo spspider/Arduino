@@ -16,7 +16,7 @@
         },
         {
             "name": "Arduino",
-            "compilerPath": "C:\\Users\\Sergey\\AppData\\Local\\Arduino15\\packages\\esp8266\\tools\\xtensa-lx106-elf-gcc\\2.5.0-4-b40a506\\bin\\xtensa-lx106-elf-g++",
+            "compilerPath": "C:\\Users\\sp_1\\AppData\\Local\\Arduino15\\packages\\esp8266\\tools\\xtensa-lx106-elf-gcc\\2.5.0-4-b40a506\\bin\\xtensa-lx106-elf-g++",
             "compilerArgs": [
                 "-U__STRICT_ANSI__",
                 "-Wall",
@@ -29,36 +29,36 @@
             ],
             "intelliSenseMode": "gcc-x64",
             "includePath": [
-                "C:\\Users\\Sergey\\AppData\\Local\\Arduino15\\packages\\esp8266\\hardware\\esp8266\\2.6.3\\tools\\sdk\\include",
-                "C:\\Users\\Sergey\\AppData\\Local\\Arduino15\\packages\\esp8266\\hardware\\esp8266\\2.6.3\\tools\\sdk\\lwip2\\include",
-                "C:\\Users\\Sergey\\AppData\\Local\\Arduino15\\packages\\esp8266\\hardware\\esp8266\\2.6.3\\tools\\sdk\\libc\\xtensa-lx106-elf\\include",
-                "C:\\Users\\Sergey\\AppData\\Local\\Arduino15\\packages\\esp8266\\hardware\\esp8266\\2.6.3\\cores\\esp8266",
-                "C:\\Users\\Sergey\\AppData\\Local\\Arduino15\\packages\\esp8266\\hardware\\esp8266\\2.6.3\\variants\\generic",
-                "D:\\My Documents\\Programming\\Projects_Arduino\\libraries\\Adafruit_GFX_Library",
-                "C:\\Users\\Sergey\\AppData\\Local\\Arduino15\\packages\\esp8266\\hardware\\esp8266\\2.6.3\\libraries\\ESP8266mDNS\\src",
-                "C:\\Users\\Sergey\\AppData\\Local\\Arduino15\\packages\\esp8266\\hardware\\esp8266\\2.6.3\\libraries\\ESP8266WiFi\\src",
-                "C:\\Users\\Sergey\\AppData\\Local\\Arduino15\\packages\\esp8266\\hardware\\esp8266\\2.6.3\\libraries\\EEPROM",
-                "C:\\Users\\Sergey\\AppData\\Local\\Arduino15\\packages\\esp8266\\hardware\\esp8266\\2.6.3\\libraries\\ESP8266WebServer\\src",
+                "C:\\Users\\sp_1\\AppData\\Local\\Arduino15\\packages\\esp8266\\hardware\\esp8266\\2.6.3\\tools\\sdk\\include",
+                "C:\\Users\\sp_1\\AppData\\Local\\Arduino15\\packages\\esp8266\\hardware\\esp8266\\2.6.3\\tools\\sdk\\lwip2\\include",
+                "C:\\Users\\sp_1\\AppData\\Local\\Arduino15\\packages\\esp8266\\hardware\\esp8266\\2.6.3\\tools\\sdk\\libc\\xtensa-lx106-elf\\include",
+                "C:\\Users\\sp_1\\AppData\\Local\\Arduino15\\packages\\esp8266\\hardware\\esp8266\\2.6.3\\cores\\esp8266",
+                "C:\\Users\\sp_1\\AppData\\Local\\Arduino15\\packages\\esp8266\\hardware\\esp8266\\2.6.3\\variants\\generic",
+                "C:\\Users\\sp_1\\AppData\\Local\\Arduino15\\packages\\esp8266\\hardware\\esp8266\\2.6.3\\libraries\\DNSServer\\src",
+                "C:\\Users\\sp_1\\AppData\\Local\\Arduino15\\packages\\esp8266\\hardware\\esp8266\\2.6.3\\libraries\\ESP8266WiFi\\src",
+                "C:\\Users\\sp_1\\AppData\\Local\\Arduino15\\packages\\esp8266\\hardware\\esp8266\\2.6.3\\libraries\\ESP8266mDNS\\src",
+                "C:\\Users\\sp_1\\AppData\\Local\\Arduino15\\packages\\esp8266\\hardware\\esp8266\\2.6.3\\libraries\\EEPROM",
+                "C:\\Users\\sp_1\\AppData\\Local\\Arduino15\\packages\\esp8266\\hardware\\esp8266\\2.6.3\\libraries\\ESP8266WebServer\\src",
                 "D:\\My Documents\\Programming\\Projects_Arduino\\libraries\\ArduinoJson\\src",
                 "D:\\My Documents\\Programming\\Projects_Arduino\\libraries\\Time",
                 "D:\\My Documents\\Programming\\Projects_Arduino\\libraries\\DHT_sensor_library_for_ESPx",
                 "D:\\My Documents\\Programming\\Projects_Arduino\\libraries\\EmonLib",
-                "C:\\Users\\Sergey\\AppData\\Local\\Arduino15\\packages\\esp8266\\hardware\\esp8266\\2.6.3\\libraries\\ESP8266SSDP",
-                "C:\\Users\\Sergey\\AppData\\Local\\Arduino15\\packages\\esp8266\\hardware\\esp8266\\2.6.3\\libraries\\Wire",
-                "D:\\My Documents\\Programming\\Projects_Arduino\\libraries\\Adafruit_ADS1X15-master",
-                "C:\\Users\\Sergey\\AppData\\Local\\Arduino15\\packages\\esp8266\\hardware\\esp8266\\2.6.3\\libraries\\ESP8266HTTPUpdateServer\\src",
+                "C:\\Users\\sp_1\\AppData\\Local\\Arduino15\\packages\\esp8266\\hardware\\esp8266\\2.6.3\\libraries\\ESP8266SSDP",
+                "C:\\Users\\sp_1\\AppData\\Local\\Arduino15\\packages\\esp8266\\hardware\\esp8266\\2.6.3\\libraries\\Wire",
+                "C:\\Users\\sp_1\\AppData\\Local\\Arduino15\\packages\\esp8266\\hardware\\esp8266\\2.6.3\\libraries\\ESP8266HTTPUpdateServer\\src",
                 "D:\\My Documents\\Programming\\Projects_Arduino\\libraries\\WakeOnLan-master\\src",
                 "D:\\My Documents\\Programming\\Projects_Arduino\\libraries\\IRremoteESP8266\\src",
-                "C:\\Users\\Sergey\\AppData\\Local\\Arduino15\\packages\\esp8266\\hardware\\esp8266\\2.6.3\\libraries\\ESP8266HTTPClient\\src",
-                "c:\\users\\sergey\\appdata\\local\\arduino15\\packages\\esp8266\\tools\\xtensa-lx106-elf-gcc\\2.5.0-4-b40a506\\xtensa-lx106-elf\\include\\c++\\4.8.2",
-                "c:\\users\\sergey\\appdata\\local\\arduino15\\packages\\esp8266\\tools\\xtensa-lx106-elf-gcc\\2.5.0-4-b40a506\\xtensa-lx106-elf\\include\\c++\\4.8.2\\xtensa-lx106-elf",
-                "c:\\users\\sergey\\appdata\\local\\arduino15\\packages\\esp8266\\tools\\xtensa-lx106-elf-gcc\\2.5.0-4-b40a506\\xtensa-lx106-elf\\include\\c++\\4.8.2\\backward",
-                "c:\\users\\sergey\\appdata\\local\\arduino15\\packages\\esp8266\\tools\\xtensa-lx106-elf-gcc\\2.5.0-4-b40a506\\lib\\gcc\\xtensa-lx106-elf\\4.8.2\\include",
-                "c:\\users\\sergey\\appdata\\local\\arduino15\\packages\\esp8266\\tools\\xtensa-lx106-elf-gcc\\2.5.0-4-b40a506\\lib\\gcc\\xtensa-lx106-elf\\4.8.2\\include-fixed",
-                "c:\\users\\sergey\\appdata\\local\\arduino15\\packages\\esp8266\\tools\\xtensa-lx106-elf-gcc\\2.5.0-4-b40a506\\xtensa-lx106-elf\\include"
+                "C:\\Users\\sp_1\\AppData\\Local\\Arduino15\\packages\\esp8266\\hardware\\esp8266\\2.6.3\\libraries\\ESP8266HTTPClient\\src",
+                "D:\\My Documents\\Programming\\Projects_Arduino\\libraries\\FastLED",
+                "c:\\users\\sp_1\\appdata\\local\\arduino15\\packages\\esp8266\\tools\\xtensa-lx106-elf-gcc\\2.5.0-4-b40a506\\xtensa-lx106-elf\\include\\c++\\4.8.2",
+                "c:\\users\\sp_1\\appdata\\local\\arduino15\\packages\\esp8266\\tools\\xtensa-lx106-elf-gcc\\2.5.0-4-b40a506\\xtensa-lx106-elf\\include\\c++\\4.8.2\\xtensa-lx106-elf",
+                "c:\\users\\sp_1\\appdata\\local\\arduino15\\packages\\esp8266\\tools\\xtensa-lx106-elf-gcc\\2.5.0-4-b40a506\\xtensa-lx106-elf\\include\\c++\\4.8.2\\backward",
+                "c:\\users\\sp_1\\appdata\\local\\arduino15\\packages\\esp8266\\tools\\xtensa-lx106-elf-gcc\\2.5.0-4-b40a506\\lib\\gcc\\xtensa-lx106-elf\\4.8.2\\include",
+                "c:\\users\\sp_1\\appdata\\local\\arduino15\\packages\\esp8266\\tools\\xtensa-lx106-elf-gcc\\2.5.0-4-b40a506\\lib\\gcc\\xtensa-lx106-elf\\4.8.2\\include-fixed",
+                "c:\\users\\sp_1\\appdata\\local\\arduino15\\packages\\esp8266\\tools\\xtensa-lx106-elf-gcc\\2.5.0-4-b40a506\\xtensa-lx106-elf\\include"
             ],
             "forcedInclude": [
-                "C:\\Users\\Sergey\\AppData\\Local\\Arduino15\\packages\\esp8266\\hardware\\esp8266\\2.6.3\\cores\\esp8266\\Arduino.h"
+                "C:\\Users\\sp_1\\AppData\\Local\\Arduino15\\packages\\esp8266\\hardware\\esp8266\\2.6.3\\cores\\esp8266\\Arduino.h"
             ],
             "cStandard": "c11",
             "cppStandard": "c++11",
@@ -298,17 +298,20 @@
         },
         {
             "name": "Arduino2",
+            "compilerPath": "",
+            "compilerArgs": [],
+            "intelliSenseMode": "windows-msvc-x64",
             "includePath": [
                 "${workspaceFolder}/**"
             ],
+            "forcedInclude": [],
+            "cStandard": "c17",
+            "cppStandard": "c++17",
             "defines": [
                 "_DEBUG",
                 "UNICODE",
                 "_UNICODE"
-            ],
-            "cStandard": "c17",
-            "cppStandard": "c++17",
-            "intelliSenseMode": "windows-msvc-x64"
+            ]
         }
     ]
 }

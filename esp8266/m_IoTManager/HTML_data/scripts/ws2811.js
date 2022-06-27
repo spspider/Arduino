@@ -162,6 +162,7 @@ function loadSettings(json) {
     setVal("bright", jsonObject.br);
     setVal("reverse_set", jsonObject.r);
     setVal("inv", jsonObject.inv);
+    setVal("ws8211_loop", jsonObject.ws8211_loop);
 
     for (var i = 0; i < numberElements; i++) {
         //if(getVal())
@@ -450,6 +451,14 @@ function loadSecondTable() {
         "type='checkbox'" +
         "onchange='clearTimeOutSave()'/>";
 
+    var ws8211_loop = document.createElement('p');
+    ws8211_loop.className = "form-control";
+    ws8211_loop.innerHTML =
+        "ws8211_loop<input id='ws8211_loop'" +
+        "class='form-control'" +
+        "type='checkbox'" +
+        "checked='true'" +
+        "onchange='clearTimeOutSave()'/>";
     // var tr = document.createElement("tr");
     tbl2 = document.getElementById('table2');
     var tr = document.createElement('tr');
@@ -459,10 +468,12 @@ function loadSecondTable() {
     createTD(tr, fadetype);
 
     createTD(tr, bright);
+    
 
     var tr1 = document.createElement('tr');
     createTD(tr1, reverse_set);
     createTD(tr1, inv);
+    createTD(tr1,ws8211_loop);
     tbl2.className = "table";
     tbl2.style.width = '100%';
     tbl2.setAttribute('border', '1');
@@ -564,6 +575,7 @@ function send_New_values_to_ESP() {
 
     getVal("reverse_set") === true ? jsonOut.r = 1 : false;
     getVal("inv") === true ? jsonOut.inv = 1 : false;
+    getVal("ws8211_loop") === true ? jsonOut.ws8211_loop = 1 : jsonOut.ws8211_loop = 0;
     //jsonOut.r=parseInt(getVal("reverse_set")===true?1:0);
     //var send_that_json = JSON.stringify(jsonOut);
     var send_that_json = JSON.stringify(jsonOut);

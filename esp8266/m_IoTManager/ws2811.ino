@@ -161,6 +161,7 @@ bool LoadData(char json[200]) {
   reverse_set = root.containsKey("r") ? root["r"] : 0;
   fadetype = root.containsKey("fdt") ? root["fdt"] : 3;
   inv = root.containsKey("inv") ? root["inv"] : 0;
+  ws8211_loop =  root.containsKey("ws8211_loop") ? root["ws8211_loop"] : ws8211_loop;
   //reverse_set = root["r"];
   if (!reverse_set) {
     //Previous_set = String(json);
