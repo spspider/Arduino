@@ -209,7 +209,7 @@ String readCommonFiletoJson(String file) {
   }
   // Проверяем размер файла, будем использовать файл размером меньше 1024 байта
   size_t size = configFile.size();
-  if (size > 1024) {
+  if (size > 2048) {
     Serial.println("Config file size is too large");
   }
   String  jsonConfig = configFile.readString();

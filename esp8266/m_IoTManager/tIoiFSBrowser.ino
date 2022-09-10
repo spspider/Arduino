@@ -306,7 +306,9 @@ void handleFileList() {
 void handle_saveIR() {
   String IRjson = server.arg("IR");
   saveCommonFiletoJson("IRButtons", IRjson, 1);
+  #if defined(IR_setup)
   updateIR();
+  #endif
 }
 
 void setup_FS(void) {
@@ -496,12 +498,13 @@ void FunctionHTTP() {
     server.send(200, "text / plain", server.arg("json")); //выслать сообщение
   }
   if (root.containsKey("sendIR")) {
+    #if defined(IR_setup)
     send_IR_code(root["sendIR"]);
     send_IR_code(root["sendIR"]);
     send_IR_code(root["sendIR"]);
     send_IR_code(root["sendIR"]);
     send_IR_code(root["sendIR"]);
-    
+    #endif
     server.send(200, "text / plain", server.arg("json")); //выслать сообщение
   }
   /*

@@ -4,9 +4,7 @@
    Version 0.1 Sept, 2015
    Based on Ken Shirriff's IrsendDemo Version 0.1 July, 2009, Copyright 2009 Ken Shirriff, http://arcfn.com
 */
-#ifndef UNIT_TEST
-#include <Arduino.h>
-#endif
+#if defined(IR_setup)
 #include <IRremoteESP8266.h>
 #include <IRrecv.h>
 #include <IRsend.h>
@@ -97,7 +95,7 @@ void send_IR_code(const char* full_code_char) {
     JsonObject& rootjs = jsonBuffer.parseObject(jsonSend);
     if (!rootjs.success()) {
       Serial.println("parseObject() failed IrRaw_Code");
-      //return;
+      return;
     }
     int codeLen = rootjs["len"];
     uint16_t Signal_ON_0[250];
@@ -225,6 +223,7 @@ void loop_IR() {
     //    yield();  // Feed the WDT (again)
   }
 }
+#endif
 /*
   void loop_IR2() {
 

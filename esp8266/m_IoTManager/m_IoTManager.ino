@@ -6,6 +6,7 @@
 //#define pubClient
 //#define ds18b20
 //#define ads1115
+#define IR_setup
 #define emon
 //------------------------------------------------------------------------------//
 
@@ -254,10 +255,11 @@ void setup() {
   //Настраиваем и запускаем SSDP интерфейс
   //  Serial.println("Start 3-SSDP");
   //SSDP_init();
-
+#if defined(IR_setup)
   if (IR_recieve) {
     setup_IR();
   }
+#endif
   //////////////////////////////////////
   // setup_w433();
   //setup_wg();
@@ -275,9 +277,11 @@ void loop() {
   captive_loop();
   test_loop();
   loop_websocket();
+#if defined(IR_setup)
   if (IR_recieve) {
     loop_IR();
   }
+#endif
   if (w433rcv != 255) {
     //loop_w433();
   }
